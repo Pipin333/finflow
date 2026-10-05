@@ -5,7 +5,6 @@ import {
   FileSpreadsheet, 
   RotateCcw, 
   Smartphone, 
-  Globe, 
   CheckCircle2, 
   Sparkles,
   ShieldCheck,
