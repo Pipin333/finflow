@@ -30,6 +30,7 @@ export interface Transaction {
   isInterestFree?: boolean // Convenio cuotas sin interés
   installmentAmount?: number // Monto por cuota mensual
   totalWithInterest?: number // Si hubo recargo, el monto total con interés
+  receiptImage?: string // Foto de boleta o comprobante en base64 comprimido
 }
 
 export interface Category {

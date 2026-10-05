@@ -42,9 +42,14 @@ Opera bajo el modelo **offline-first**: todos los datos residen en el navegador 
 - Buscador en tiempo real por concepto, categoría o notas.
 - Filtros simultáneos por Tipo (Ingreso, Gasto, Transferencia), Cuenta, Categoría y Período mensual.
 
-### 5. Respaldo y Portabilidad Total
+### 5. Boletas y Comprobantes (Cámara o Archivo)
+- Permite tomar fotos de boletas y tickets directamente con la cámara del teléfono o seleccionarlas de la galería / archivos.
+- **Compresión local inteligente**: Reduce fotos pesadas de teléfonos (5MB-15MB) a ~50KB-80KB automáticamente usando Canvas antes de guardar, garantizando nitidez en los números y fechas sin saturar el almacenamiento local.
+- **Visor Lightbox**: Visualizador emergente para revisar la boleta ampliada en pantalla completa y opción de descarga.
+
+### 6. Respaldo y Portabilidad Total
 - **Exportación a CSV**: Compatible con Microsoft Excel, Apple Numbers y Google Sheets.
-- **Copia de Seguridad en JSON**: Guarda un archivo completo de tus datos para respaldarlo o transferirlo entre diferentes navegadores o teléfonos.
+- **Copia de Seguridad en JSON**: Guarda un archivo completo de tus datos (incluyendo boletas adjuntas) para respaldarlo o transferirlo entre dispositivos.
 - **Restaurador de JSON**: Permite migrar o restaurar tus finanzas con un solo clic.
 
 ---
