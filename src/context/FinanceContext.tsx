@@ -7,7 +7,10 @@ interface FinanceContextType {
   transactions: Transaction[]
   categories: Category[]
   selectedMonth: string // YYYY-MM
+  currency: string
+  isSetupCompleted: boolean
   setSelectedMonth: (month: string) => void
+  setCurrency: (currency: string) => void
   addTransaction: (tx: Omit<Transaction, 'id'>) => void
   editTransaction: (tx: Transaction) => void
   deleteTransaction: (id: string) => void
@@ -18,20 +21,42 @@ interface FinanceContextType {
   exportToJSON: () => void
   importFromJSON: (jsonString: string) => boolean
   exportToCSV: () => void
-  resetAllData: () => void
+  completeSetup: (initialAccounts: Account[], chosenCurrency: string) => void
+  resetToZero: () => void
+  loadDemoData: () => void
 }
 
 const FinanceContext = createContext<FinanceContextType | undefined>(undefined)
 
-const STORAGE_KEY_ACCOUNTS = 'finflow_accounts_v1'
-const STORAGE_KEY_TRANSACTIONS = 'finflow_transactions_v1'
-const STORAGE_KEY_CATEGORIES = 'finflow_categories_v1'
+const STORAGE_KEY_ACCOUNTS = 'finflow_accounts_v2'
+const STORAGE_KEY_TRANSACTIONS = 'finflow_transactions_v2'
+const STORAGE_KEY_CATEGORIES = 'finflow_categories_v2'
+const STORAGE_KEY_SETUP = 'finflow_setup_completed_v2'
+const STORAGE_KEY_CURRENCY = 'finflow_currency_v2'
 
 export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const currentMonthStr = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonthStr)
 
-  // Inicializar cuentas
+  // Estado de setup inicial
+  const [isSetupCompleted, setIsSetupCompleted] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY_SETUP) === 'true'
+    } catch {
+      return false
+    }
+  })
+
+  // Moneda elegida
+  const [currency, setCurrency] = useState<string>(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY_CURRENCY) || '$'
+    } catch {
+      return '$'
+    }
+  })
+
+  // Cuentas (por defecto vacías en cero hasta que el usuario complete el setup o cargue demo)
   const [accounts, setAccounts] = useState<Account[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_ACCOUNTS)
@@ -39,10 +64,10 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     } catch (e) {
       console.error('Error loading accounts:', e)
     }
-    return DEFAULT_ACCOUNTS
+    return []
   })
 
-  // Inicializar transacciones
+  // Transacciones (por defecto vacías en cero)
   const [transactions, setTransactions] = useState<Transaction[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_TRANSACTIONS)
@@ -50,10 +75,10 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     } catch (e) {
       console.error('Error loading transactions:', e)
     }
-    return generateSeedTransactions()
+    return []
   })
 
-  // Inicializar categorías
+  // Categorías
   const [categories, setCategories] = useState<Category[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_CATEGORIES)
@@ -89,6 +114,29 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [categories])
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_SETUP, String(isSetupCompleted))
+    } catch (e) {
+      console.error('Error saving setup status:', e)
+    }
+  }, [isSetupCompleted])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_CURRENCY, currency)
+    } catch (e) {
+      console.error('Error saving currency:', e)
+    }
+  }, [currency])
+
+  const completeSetup = (initialAccounts: Account[], chosenCurrency: string) => {
+    setAccounts(initialAccounts)
+    setTransactions([]) // Todo en cero
+    setCurrency(chosenCurrency)
+    setIsSetupCompleted(true)
+  }
+
   const addTransaction = (tx: Omit<Transaction, 'id'>) => {
     const newTx: Transaction = {
       ...tx,
@@ -121,7 +169,6 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setAccounts(prev => prev.filter(a => a.id !== id))
   }
 
-  // Pago de Tarjeta de Crédito (Transferencia de fondos de cuenta líquida hacia la tarjeta)
   const payCreditCard = (fromAccountId: string, creditAccountId: string, amount: number, notes?: string) => {
     const fromAcc = accounts.find(a => a.id === fromAccountId)
     const creditAcc = accounts.find(a => a.id === creditAccountId)
@@ -143,8 +190,9 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const exportToJSON = () => {
     const backupData = {
-      version: 1,
+      version: 2,
       exportDate: new Date().toISOString(),
+      currency,
       accounts,
       transactions,
       categories,
@@ -164,9 +212,11 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (Array.isArray(parsed.accounts) && Array.isArray(parsed.transactions)) {
         setAccounts(parsed.accounts)
         setTransactions(parsed.transactions)
+        if (parsed.currency) setCurrency(parsed.currency)
         if (Array.isArray(parsed.categories)) {
           setCategories(parsed.categories)
         }
+        setIsSetupCompleted(true)
         return true
       }
       return false
@@ -205,13 +255,21 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     URL.revokeObjectURL(url)
   }
 
-  const resetAllData = () => {
+  const resetToZero = () => {
+    setAccounts([])
+    setTransactions([])
+    setCategories(DEFAULT_CATEGORIES)
+    setIsSetupCompleted(false)
+    localStorage.removeItem(STORAGE_KEY_ACCOUNTS)
+    localStorage.removeItem(STORAGE_KEY_TRANSACTIONS)
+    localStorage.removeItem(STORAGE_KEY_SETUP)
+  }
+
+  const loadDemoData = () => {
     setAccounts(DEFAULT_ACCOUNTS)
     setTransactions(generateSeedTransactions())
     setCategories(DEFAULT_CATEGORIES)
-    localStorage.removeItem(STORAGE_KEY_ACCOUNTS)
-    localStorage.removeItem(STORAGE_KEY_TRANSACTIONS)
-    localStorage.removeItem(STORAGE_KEY_CATEGORIES)
+    setIsSetupCompleted(true)
   }
 
   return (
@@ -221,7 +279,10 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         transactions,
         categories,
         selectedMonth,
+        currency,
+        isSetupCompleted,
         setSelectedMonth,
+        setCurrency,
         addTransaction,
         editTransaction,
         deleteTransaction,
@@ -232,7 +293,9 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         exportToJSON,
         importFromJSON,
         exportToCSV,
-        resetAllData,
+        completeSetup,
+        resetToZero,
+        loadDemoData,
       }}
     >
       {children}

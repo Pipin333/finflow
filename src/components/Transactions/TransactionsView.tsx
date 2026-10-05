@@ -25,7 +25,8 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
   onOpenNewTransaction,
   onEditTransaction,
 }) => {
-  const { transactions, accounts, categories, deleteTransaction, selectedMonth } = useFinance()
+  const { transactions, accounts, categories, deleteTransaction, selectedMonth, currency } = useFinance()
+  const fmt = (amount: number) => formatCurrency(amount, currency)
 
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedType, setSelectedType] = useState<TransactionType | 'all'>('all')
@@ -93,7 +94,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
   }, [filteredTransactions])
 
   const handleDelete = (tx: Transaction) => {
-    if (confirm(`¿Eliminar movimiento "${tx.description}" por ${formatCurrency(tx.amount)}?`)) {
+    if (confirm(`¿Eliminar movimiento "${tx.description}" por ${fmt(tx.amount)}?`)) {
       deleteTransaction(tx.id)
     }
   }
@@ -196,8 +197,8 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
 
           <div className="flex items-center space-x-4 text-slate-400">
             <span>Resultados: <strong className="text-slate-200">{filteredTransactions.length}</strong></span>
-            <span>Ingresos: <strong className="text-emerald-400 tabular-nums">{formatCurrency(totals.income)}</strong></span>
-            <span>Gastos: <strong className="text-rose-400 tabular-nums">{formatCurrency(totals.expense)}</strong></span>
+            <span>Ingresos: <strong className="text-emerald-400 tabular-nums">{fmt(totals.income)}</strong></span>
+            <span>Gastos: <strong className="text-rose-400 tabular-nums">{fmt(totals.expense)}</strong></span>
           </div>
         </div>
       </div>
@@ -292,11 +293,11 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                         }`}
                       >
                         {isIncome ? '+' : isExpense ? '-' : ''}
-                        {formatCurrency(tx.amount)}
+                        {fmt(tx.amount)}
                       </div>
                       {tx.installmentsCount && tx.installmentsCount > 1 && tx.installmentAmount && (
                         <div className="text-xs text-indigo-300 font-medium tabular-nums">
-                          {formatCurrency(tx.installmentAmount)} por mes
+                          {fmt(tx.installmentAmount)} por mes
                         </div>
                       )}
                     </div>

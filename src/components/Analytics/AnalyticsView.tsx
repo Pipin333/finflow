@@ -4,7 +4,8 @@ import { useFinance } from '../../context/FinanceContext'
 import { formatCurrency } from '../../utils/financeCalculators'
 
 export const AnalyticsView: React.FC = () => {
-  const { transactions, selectedMonth } = useFinance()
+  const { transactions, selectedMonth, currency } = useFinance()
+  const fmt = (amount: number) => formatCurrency(amount, currency)
   const [selectedYear, selectedMonthNum] = selectedMonth.split('-').map(Number)
 
   // Gastos por categoría en el mes seleccionado
@@ -140,7 +141,7 @@ export const AnalyticsView: React.FC = () => {
                       <div className="flex items-center space-x-3">
                         <span className="text-slate-400 tabular-nums">{cat.percentage}%</span>
                         <span className="font-semibold text-slate-100 tabular-nums">
-                          {formatCurrency(cat.amount)}
+                          {fmt(cat.amount)}
                         </span>
                       </div>
                     </div>
@@ -153,7 +154,7 @@ export const AnalyticsView: React.FC = () => {
           <div className="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
             <span>Total Gastos del Período:</span>
             <strong className="text-rose-400 font-bold text-sm tabular-nums">
-              {formatCurrency(categoryBreakdown.totalExpenses)}
+              {fmt(categoryBreakdown.totalExpenses)}
             </strong>
           </div>
         </div>
@@ -191,14 +192,14 @@ export const AnalyticsView: React.FC = () => {
                       <div
                         className="w-3.5 sm:w-4 bg-emerald-500 rounded-t transition-all group-hover:brightness-110"
                         style={{ height: `${Math.max(4, incomeHeight)}%` }}
-                        title={`${m.monthLabel} - Ingresos: ${formatCurrency(m.income)}`}
+                        title={`${m.monthLabel} - Ingresos: ${fmt(m.income)}`}
                       ></div>
 
                       {/* Barra Gasto */}
                       <div
                         className="w-3.5 sm:w-4 bg-rose-500 rounded-t transition-all group-hover:brightness-110"
                         style={{ height: `${Math.max(4, expenseHeight)}%` }}
-                        title={`${m.monthLabel} - Gastos: ${formatCurrency(m.expense)}`}
+                        title={`${m.monthLabel} - Gastos: ${fmt(m.expense)}`}
                       ></div>
                     </div>
                     <span className="text-[11px] font-medium text-slate-400 capitalize mt-2">
@@ -234,7 +235,7 @@ export const AnalyticsView: React.FC = () => {
                   </div>
                 </div>
                 <div className="font-bold text-rose-400 tabular-nums">
-                  {formatCurrency(exp.amount)}
+                  {fmt(exp.amount)}
                 </div>
               </div>
             ))}

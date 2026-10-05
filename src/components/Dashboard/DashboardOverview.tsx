@@ -7,10 +7,8 @@ import {
   ArrowUpRight, 
   ArrowDownLeft, 
   Clock, 
-  AlertCircle,
-  PlusCircle,
-  CheckCircle2,
-  Calendar
+  Calendar,
+  Sparkles
 } from 'lucide-react'
 import { useFinance } from '../../context/FinanceContext'
 import { 
@@ -34,8 +32,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onOpenNewTransaction,
   onOpenPayCredit,
 }) => {
-  const { accounts, transactions, selectedMonth } = useFinance()
+  const { accounts, transactions, selectedMonth, currency } = useFinance()
   const [targetYear, targetMonth] = selectedMonth.split('-').map(Number)
+
+  const fmt = (amount: number) => formatCurrency(amount, currency)
 
   const { liquidAssets, totalDebt, netWorth } = getNetWorth(accounts, transactions)
   const monthlyMetrics = getMonthlyMetrics(transactions, targetYear, targetMonth)
@@ -58,11 +58,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <Wallet className="w-4 h-4 text-emerald-400" />
           </div>
           <div className="text-2xl font-bold tracking-tight text-white tabular-nums">
-            {formatCurrency(netWorth)}
+            {fmt(netWorth)}
           </div>
           <div className="mt-2 text-xs text-slate-400 flex items-center justify-between">
-            <span>Activos: <strong className="text-emerald-400 tabular-nums">{formatCurrency(liquidAssets)}</strong></span>
-            <span>Deuda: <strong className="text-rose-400 tabular-nums">{formatCurrency(totalDebt)}</strong></span>
+            <span>Activos: <strong className="text-emerald-400 tabular-nums">{fmt(liquidAssets)}</strong></span>
+            <span>Deuda: <strong className="text-rose-400 tabular-nums">{fmt(totalDebt)}</strong></span>
           </div>
         </div>
 
@@ -75,7 +75,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </span>
           </div>
           <div className="text-2xl font-bold tracking-tight text-emerald-400 tabular-nums">
-            {formatCurrency(monthlyMetrics.totalIncome)}
+            {fmt(monthlyMetrics.totalIncome)}
           </div>
           <div className="mt-2 text-xs text-slate-400">
             Acreditaciones en el período
@@ -91,7 +91,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </span>
           </div>
           <div className="text-2xl font-bold tracking-tight text-rose-400 tabular-nums">
-            {formatCurrency(monthlyMetrics.totalExpense)}
+            {fmt(monthlyMetrics.totalExpense)}
           </div>
           <div className="mt-2 text-xs text-slate-400">
             Incluye cuotas activas del mes
@@ -113,7 +113,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <div className={`text-2xl font-bold tracking-tight tabular-nums ${
             monthlyMetrics.netSavings >= 0 ? 'text-emerald-400' : 'text-rose-400'
           }`}>
-            {formatCurrency(monthlyMetrics.netSavings)}
+            {fmt(monthlyMetrics.netSavings)}
           </div>
           <div className="mt-2 text-xs text-slate-400">
             {monthlyMetrics.netSavings >= 0 ? 'Superávit disponible' : 'Déficit del mes'}
@@ -138,7 +138,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               onClick={onGoToAccounts}
               className="text-xs text-indigo-400 hover:text-indigo-300 font-medium self-start sm:self-auto"
             >
-              Ver detalle completo de cuentas &rarr;
+              Ver detalle de cuentas &rarr;
             </button>
           </div>
 
@@ -165,7 +165,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     <div className="text-right">
                       <span className="text-[11px] text-slate-400 block uppercase font-medium">A pagar este resumen</span>
                       <span className="text-lg font-bold text-rose-400 tabular-nums">
-                        {formatCurrency(stmt.statementTotalToPay)}
+                        {fmt(stmt.statementTotalToPay)}
                       </span>
                     </div>
                   </div>
@@ -197,7 +197,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   <div>
                     <div className="flex justify-between text-xs text-slate-400 mb-1">
                       <span>Límite utilizado ({utilPercent}%)</span>
-                      <span className="tabular-nums">Disponible: {formatCurrency(stmt.availableCredit)}</span>
+                      <span className="tabular-nums">Disponible: {fmt(stmt.availableCredit)}</span>
                     </div>
                     <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
                       <div
@@ -260,7 +260,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 </div>
                 <div>
                   <div className="text-sm font-medium text-slate-100">Registrar Ingreso</div>
-                  <div className="text-xs text-slate-400">Sueldo, honorarios o rendimientos</div>
+                  <div className="text-xs text-slate-400">Sueldo, honorarios o transferencias</div>
                 </div>
               </div>
               <ArrowDownLeft className="w-4 h-4 text-slate-400" />
@@ -276,7 +276,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 </div>
                 <div>
                   <div className="text-sm font-medium text-slate-100">Transferir entre Cuentas</div>
-                  <div className="text-xs text-slate-400">Mover saldo a ahorros o pagar cuentas</div>
+                  <div className="text-xs text-slate-400">Mover saldo a ahorros o abonar tarjeta</div>
                 </div>
               </div>
               <ArrowUpRight className="w-4 h-4 text-slate-400" />
@@ -292,79 +292,88 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <h2 className="text-base font-semibold text-white">Últimos Movimientos</h2>
                 <p className="text-xs text-slate-400 mt-0.5">Historial reciente de ingresos, gastos y cuotas</p>
               </div>
-              <button
-                onClick={onGoToTransactions}
-                className="text-xs font-medium text-emerald-400 hover:text-emerald-300"
-              >
-                Ver todos &rarr;
-              </button>
+              {recentTransactions.length > 0 && (
+                <button
+                  onClick={onGoToTransactions}
+                  className="text-xs font-medium text-emerald-400 hover:text-emerald-300"
+                >
+                  Ver todos &rarr;
+                </button>
+              )}
             </div>
 
-            <div className="divide-y divide-slate-800/70">
-              {recentTransactions.map(tx => {
-                const acc = accounts.find(a => a.id === tx.accountId)
-                const isExpense = tx.type === 'expense'
-                const isIncome = tx.type === 'income'
+            {recentTransactions.length === 0 ? (
+              <div className="py-12 text-center text-slate-400 text-xs">
+                <p className="font-medium text-slate-300">No hay movimientos registrados este mes.</p>
+                <p className="mt-1 text-slate-500">Utiliza las acciones rápidas para registrar tus primeros ingresos o gastos.</p>
+              </div>
+            ) : (
+              <div className="divide-y divide-slate-800/70">
+                {recentTransactions.map(tx => {
+                  const acc = accounts.find(a => a.id === tx.accountId)
+                  const isExpense = tx.type === 'expense'
+                  const isIncome = tx.type === 'income'
 
-                return (
-                  <div key={tx.id} className="py-3 flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div
-                        className={`p-2 rounded-xl flex-shrink-0 ${
-                          isIncome
-                            ? 'bg-emerald-500/10 text-emerald-400'
-                            : isExpense
-                            ? 'bg-rose-500/10 text-rose-400'
-                            : 'bg-blue-500/10 text-blue-400'
-                        }`}
-                      >
-                        {isIncome ? (
-                          <ArrowDownLeft className="w-4 h-4" />
-                        ) : isExpense ? (
-                          <ArrowUpRight className="w-4 h-4" />
-                        ) : (
-                          <Wallet className="w-4 h-4" />
-                        )}
-                      </div>
-
-                      <div>
-                        <div className="text-sm font-medium text-slate-100 flex items-center space-x-2">
-                          <span>{tx.description}</span>
-                          {tx.installmentsCount && tx.installmentsCount > 1 && (
-                            <span className="text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-1.5 py-0.2 rounded-full">
-                              {tx.installmentsCount} cuotas {tx.isInterestFree ? 's/int' : ''}
-                            </span>
+                  return (
+                    <div key={tx.id} className="py-3 flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div
+                          className={`p-2 rounded-xl flex-shrink-0 ${
+                            isIncome
+                              ? 'bg-emerald-500/10 text-emerald-400'
+                              : isExpense
+                              ? 'bg-rose-500/10 text-rose-400'
+                              : 'bg-blue-500/10 text-blue-400'
+                          }`}
+                        >
+                          {isIncome ? (
+                            <ArrowDownLeft className="w-4 h-4" />
+                          ) : isExpense ? (
+                            <ArrowUpRight className="w-4 h-4" />
+                          ) : (
+                            <Wallet className="w-4 h-4" />
                           )}
                         </div>
-                        <div className="text-xs text-slate-400 flex items-center space-x-2 mt-0.5">
-                          <span>{tx.date}</span>
-                          <span>&bull;</span>
-                          <span>{tx.category}</span>
-                          <span>&bull;</span>
-                          <span className="text-slate-300">{acc?.name}</span>
-                        </div>
-                      </div>
-                    </div>
 
-                    <div className="text-right">
-                      <div
-                        className={`text-sm font-semibold tabular-nums ${
-                          isIncome ? 'text-emerald-400' : isExpense ? 'text-slate-100' : 'text-blue-400'
-                        }`}
-                      >
-                        {isIncome ? '+' : isExpense ? '-' : ''}
-                        {formatCurrency(tx.amount)}
-                      </div>
-                      {tx.installmentsCount && tx.installmentsCount > 1 && tx.installmentAmount && (
-                        <div className="text-[10px] text-slate-400 tabular-nums">
-                          ({formatCurrency(tx.installmentAmount)}/mes)
+                        <div>
+                          <div className="text-sm font-medium text-slate-100 flex items-center space-x-2">
+                            <span>{tx.description}</span>
+                            {tx.installmentsCount && tx.installmentsCount > 1 && (
+                              <span className="text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-1.5 py-0.2 rounded-full">
+                                {tx.installmentsCount} cuotas {tx.isInterestFree ? 's/int' : ''}
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-xs text-slate-400 flex items-center space-x-2 mt-0.5">
+                            <span>{tx.date}</span>
+                            <span>&bull;</span>
+                            <span>{tx.category}</span>
+                            <span>&bull;</span>
+                            <span className="text-slate-300">{acc?.name}</span>
+                          </div>
                         </div>
-                      )}
+                      </div>
+
+                      <div className="text-right">
+                        <div
+                          className={`text-sm font-semibold tabular-nums ${
+                            isIncome ? 'text-emerald-400' : isExpense ? 'text-slate-100' : 'text-blue-400'
+                          }`}
+                        >
+                          {isIncome ? '+' : isExpense ? '-' : ''}
+                          {fmt(tx.amount)}
+                        </div>
+                        {tx.installmentsCount && tx.installmentsCount > 1 && tx.installmentAmount && (
+                          <div className="text-[10px] text-slate-400 tabular-nums">
+                            ({fmt(tx.installmentAmount)}/mes)
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
-            </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>

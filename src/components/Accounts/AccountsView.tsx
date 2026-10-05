@@ -8,9 +8,7 @@ import {
   Clock, 
   Calendar, 
   ChevronDown, 
-  ChevronUp, 
-  CheckCircle,
-  AlertCircle
+  ChevronUp
 } from 'lucide-react'
 import { useFinance } from '../../context/FinanceContext'
 import { Account, AccountType } from '../../types'
@@ -32,8 +30,10 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
   onEditAccount,
   onOpenPayCredit,
 }) => {
-  const { accounts, transactions, deleteAccount } = useFinance()
+  const { accounts, transactions, deleteAccount, currency } = useFinance()
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
+
+  const fmt = (amount: number) => formatCurrency(amount, currency)
 
   const liquidAccounts = accounts.filter(a => !isCreditAccount(a.type))
   const creditAccounts = accounts.filter(a => isCreditAccount(a.type))
@@ -86,8 +86,8 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
         </div>
 
         {creditAccounts.length === 0 ? (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-400">
-            No tienes tarjetas de crédito configuradas. Pulsa "Nueva Cuenta o Tarjeta" para añadir una.
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-400 text-xs">
+            No tienes tarjetas de crédito configuradas. Pulsa "Nueva Cuenta o Tarjeta" si utilizas tarjeta.
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -139,13 +139,13 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                       <div>
                         <div className="text-[11px] text-slate-300/90 font-medium uppercase">Deuda Total Comprometida</div>
                         <div className="text-2xl font-extrabold text-white tabular-nums">
-                          {formatCurrency(stmt.totalDebt)}
+                          {fmt(stmt.totalDebt)}
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="text-[10px] text-slate-300/90 uppercase font-medium">Límite Total</div>
                         <div className="text-sm font-semibold text-slate-200 tabular-nums">
-                          {formatCurrency(card.creditLimit || 0)}
+                          {fmt(card.creditLimit || 0)}
                         </div>
                       </div>
                     </div>
@@ -185,7 +185,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                     {/* Barra de límite disponible */}
                     <div>
                       <div className="flex justify-between text-xs text-slate-400 mb-1.5 font-medium">
-                        <span>Disponible: <strong className="text-emerald-400 tabular-nums">{formatCurrency(stmt.availableCredit)}</strong></span>
+                        <span>Disponible: <strong className="text-emerald-400 tabular-nums">{fmt(stmt.availableCredit)}</strong></span>
                         <span className="tabular-nums">Uso: {utilPercent}%</span>
                       </div>
                       <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800/60">
@@ -203,7 +203,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                       <div>
                         <span className="text-[10px] uppercase font-bold text-slate-400 block">Total a pagar este resumen</span>
                         <span className="text-lg font-bold text-rose-400 tabular-nums">
-                          {formatCurrency(stmt.statementTotalToPay)}
+                          {fmt(stmt.statementTotalToPay)}
                         </span>
                       </div>
                       <button
@@ -247,11 +247,11 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                                       Cuota {item.currentInstallment} de {item.totalInstallments}
                                     </span>
                                     <span>&bull;</span>
-                                    <span>Resta pagar {formatCurrency(item.remainingAmount)}</span>
+                                    <span>Resta pagar {fmt(item.remainingAmount)}</span>
                                   </div>
                                 </div>
                                 <div className="text-right font-semibold text-slate-100 tabular-nums">
-                                  {formatCurrency(item.monthlyAmount)}/mes
+                                  {fmt(item.monthlyAmount)}/mes
                                 </div>
                               </div>
                             ))
@@ -274,53 +274,59 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
           <h2 className="text-base font-semibold text-white">Cuentas Líquidas & Efectivo</h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {liquidAccounts.map(acc => {
-            const balance = getAccountRealBalance(acc, transactions)
+        {liquidAccounts.length === 0 ? (
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-400 text-xs">
+            No tienes cuentas líquidas registradas. Pulsa "Nueva Cuenta o Tarjeta" para añadir una.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {liquidAccounts.map(acc => {
+              const balance = getAccountRealBalance(acc, transactions)
 
-            return (
-              <div
-                key={acc.id}
-                className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: acc.color }}></span>
-                      <div>
-                        <h3 className="font-semibold text-sm text-slate-100">{acc.name}</h3>
-                        <span className="text-[11px] text-slate-400">{getAccountTypeName(acc.type)}</span>
+              return (
+                <div
+                  key={acc.id}
+                  className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-2.5">
+                        <span className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: acc.color }}></span>
+                        <div>
+                          <h3 className="font-semibold text-sm text-slate-100">{acc.name}</h3>
+                          <span className="text-[11px] text-slate-400">{getAccountTypeName(acc.type)}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <button
+                          onClick={() => onEditAccount(acc)}
+                          className="p-1 text-slate-400 hover:text-white rounded transition-colors"
+                          title="Editar cuenta"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(acc)}
+                          className="p-1 text-slate-400 hover:text-rose-400 rounded transition-colors"
+                          title="Eliminar cuenta"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <button
-                        onClick={() => onEditAccount(acc)}
-                        className="p-1 text-slate-400 hover:text-white rounded transition-colors"
-                        title="Editar cuenta"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(acc)}
-                        className="p-1 text-slate-400 hover:text-rose-400 rounded transition-colors"
-                        title="Eliminar cuenta"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
 
-                  <div className="mt-4">
-                    <span className="text-[11px] text-slate-400 uppercase font-medium">Saldo Disponible</span>
-                    <div className="text-2xl font-bold text-emerald-400 tabular-nums">
-                      {formatCurrency(balance)}
+                    <div className="mt-4">
+                      <span className="text-[11px] text-slate-400 uppercase font-medium">Saldo Disponible</span>
+                      <div className="text-2xl font-bold text-emerald-400 tabular-nums">
+                        {fmt(balance)}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )
-          })}
-        </div>
+              )
+            })}
+          </div>
+        )}
       </div>
     </div>
   )

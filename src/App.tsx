@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FinanceProvider } from './context/FinanceContext'
+import { FinanceProvider, useFinance } from './context/FinanceContext'
 import { Header } from './components/Header'
 import { Navigation, TabType } from './components/Navigation'
 import { DashboardOverview } from './components/Dashboard/DashboardOverview'
@@ -10,9 +10,11 @@ import { SettingsView } from './components/Settings/SettingsView'
 import { TransactionModal } from './components/Modals/TransactionModal'
 import { PayCreditModal } from './components/Modals/PayCreditModal'
 import { AccountModal } from './components/Modals/AccountModal'
+import { InitialSetupModal } from './components/Modals/InitialSetupModal'
 import { Transaction, Account, TransactionType } from './types'
 
 const AppContent: React.FC = () => {
+  const { isSetupCompleted, completeSetup } = useFinance()
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
 
   // Modals state
@@ -98,7 +100,13 @@ const AppContent: React.FC = () => {
         {activeTab === 'settings' && <SettingsView />}
       </main>
 
-      {/* Modales globales */}
+      {/* Modal de Onboarding / Setup Inicial */}
+      <InitialSetupModal
+        isOpen={!isSetupCompleted}
+        onComplete={completeSetup}
+      />
+
+      {/* Modales globales de operación */}
       <TransactionModal
         isOpen={isTxModalOpen}
         onClose={() => setIsTxModalOpen(false)}
