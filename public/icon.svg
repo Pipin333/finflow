@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#bg)"/>
+  <rect x="32" y="32" width="448" height="448" rx="100" fill="none" stroke="#334155" stroke-width="6"/>
+  <!-- Graphic: wallet & pulse flow -->
+  <path d="M128 176 C128 152 148 132 172 132 L340 132 C364 132 384 152 384 176 L384 336 C384 360 364 380 340 380 L172 380 C148 380 128 360 128 336 Z" fill="#1e293b" stroke="#475569" stroke-width="12" />
+  <path d="M128 210 L384 210" stroke="#334155" stroke-width="8" />
+  <circle cx="340" cy="275" r="24" fill="url(#accent)"/>
+  <path d="M180 310 L230 260 L270 290 L330 230" fill="none" stroke="#10b981" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+  <circle cx="330" cy="230" r="8" fill="#34d399"/>
+</svg>
