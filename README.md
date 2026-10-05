@@ -8,7 +8,15 @@ Opera bajo el modelo **offline-first**: todos los datos residen en el navegador 
 
 ## 🚀 Características Principales
 
-### 1. Gestión Multicuenta y Tarjetas
+### 1. Asistente de Configuración Inicial (Onboarding)
+- **Inicio en Cero**: La aplicación comienza vacía y lista para registrar los datos reales del usuario.
+- **Wizard paso a paso**:
+  - Selección de **moneda principal** (`$`, `CLP`, `ARS`, `USD`, `EUR`, `MXN`, `COP`, `S/`, etc.).
+  - Configuración inicial de cuentas líquidas y saldos iniciales disponibles.
+  - Configuración de tarjetas de crédito con día de corte y día de vencimiento de pago.
+  - Botón de reinicio o carga de datos demo accesible en cualquier momento desde *Ajustes*.
+
+### 2. Gestión Multicuenta y Tarjetas
 - **Cuentas Líquidas**: Seguimiento de cuentas corrientes bancarias, cajas de ahorro y efectivo en mano.
 - **Tarjetas de Crédito y Líneas de Financiamiento**:
   - Control de saldo adeudado y crédito disponible en tiempo real con barra de consumo.
