@@ -89,6 +89,7 @@ Sigue las instrucciones de la consola:
 ## 🛠️ Tecnologías Utilizadas
 
 - **Framework**: React 19 + TypeScript + Vite.
+- **Testing**: Vitest (Suite de pruebas unitarias ultra rápida para TypeScript).
 - **Diseño & Estilos**: Tailwind CSS con diseño adaptativo móvil/desktop y modo oscuro sobrio.
 - **Iconografía**: Lucide React (iconos SVG de trazo consistente).
 - **Animaciones & Microinteracciones**: Canvas Confetti para celebración de pagos de deudas.
@@ -105,6 +106,15 @@ Sigue las instrucciones de la consola:
 ### Instalación de Dependencias
 ```bash
 npm install
+```
+
+### Ejecutar Tests Unitarios
+```bash
+# Ejecutar suite de pruebas una vez
+npm test
+
+# Modo interactivo / vigilancia de cambios
+npm run test:watch
 ```
 
 ### Iniciar Servidor de Desarrollo con Acceso Móvil
