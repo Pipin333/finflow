@@ -94,20 +94,20 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
       role="dialog" 
       aria-modal="true" 
       aria-labelledby="pay-credit-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ps-bg/85 backdrop-blur-sm overflow-y-auto"
     >
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between p-5 border-b border-slate-800">
+      <div className="bg-ps-surface border-2 border-ps-border rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between p-5 border-b border-ps-border/70">
           <div className="flex items-center space-x-2">
-            <CreditCard className="w-5 h-5 text-indigo-400" />
-            <h2 id="pay-credit-modal-title" className="text-base font-bold text-white">
-              Pagar Tarjeta de Crédito
+            <CreditCard className="w-5 h-5 text-ps-accent" />
+            <h2 id="pay-credit-modal-title" className="text-base font-bold text-white font-mono">
+              Pagar Tarjeta de Credito
             </h2>
           </div>
           <button
             onClick={onClose}
             aria-label="Cerrar modal de pago de tarjeta"
-            className="p-1.5 text-slate-400 hover:text-white rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 transition-colors"
+            className="p-1.5 text-ps-muted hover:text-white rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -115,15 +115,15 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
 
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           {validationError && (
-            <div role="alert" className="p-3 bg-rose-500/15 border border-rose-500/30 rounded-xl text-xs text-rose-300 font-medium">
+            <div role="alert" className="p-3 bg-ps-recessed border border-ps-danger rounded-xl text-xs text-ps-danger font-mono font-medium">
               {validationError}
             </div>
           )}
 
           {/* Tarjeta a Pagar */}
           <div>
-            <label htmlFor="pay-card-select" className="block text-xs font-semibold text-slate-300 mb-1">
-              Tarjeta o Línea de Crédito a Amortizar
+            <label htmlFor="pay-card-select" className="block text-xs font-mono font-semibold text-ps-muted mb-1">
+              Tarjeta o Linea de Credito a Amortizar
             </label>
             <select
               id="pay-card-select"
@@ -137,7 +137,7 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
                   setAmount(String(s.statementTotalToPay || s.totalDebt))
                 }
               }}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-indigo-500"
+              className="w-full bg-ps-recessed border border-ps-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent focus:border-ps-accent font-mono"
             >
               {creditCards.map(c => (
                 <option key={c.id} value={c.id}>
@@ -149,27 +149,27 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
 
           {/* Estado de la tarjeta */}
           {cardSummary && (
-            <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs space-y-2">
-              <div className="flex justify-between text-slate-400">
-                <span>Resumen próximo a pagar:</span>
-                <strong className="text-rose-400 tabular-nums">
+            <div className="bg-ps-recessed p-3.5 rounded-xl border border-ps-border/70 text-xs font-mono space-y-2">
+              <div className="flex justify-between text-ps-muted">
+                <span>Resumen proximo a pagar:</span>
+                <strong className="text-ps-danger tabular-nums">
                   {formatCurrency(cardSummary.statementTotalToPay)}
                 </strong>
               </div>
-              <div className="flex justify-between text-slate-400">
+              <div className="flex justify-between text-ps-muted">
                 <span>Deuda Total acumulada:</span>
-                <strong className="text-slate-200 tabular-nums">
+                <strong className="text-white tabular-nums">
                   {formatCurrency(cardSummary.totalDebt)}
                 </strong>
               </div>
 
               {/* Botones de montos sugeridos */}
-              <div className="flex space-x-2 pt-2 border-t border-slate-800/80">
+              <div className="flex space-x-2 pt-2 border-t border-ps-border/70">
                 {cardSummary.statementTotalToPay > 0 && (
                   <button
                     type="button"
                     onClick={() => handleQuickAmount(cardSummary.statementTotalToPay)}
-                    className="flex-1 py-1.5 px-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-lg text-[11px] font-semibold transition-colors"
+                    className="flex-1 py-1.5 px-2 bg-ps-surface hover:bg-ps-recessed text-ps-accent border border-ps-accent/50 rounded-lg text-[11px] font-mono font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                   >
                     Pagar Resumen ({formatCurrency(cardSummary.statementTotalToPay)})
                   </button>
@@ -178,7 +178,7 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
                   <button
                     type="button"
                     onClick={() => handleQuickAmount(cardSummary.totalDebt)}
-                    className="flex-1 py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-[11px] font-semibold transition-colors"
+                    className="flex-1 py-1.5 px-2 bg-ps-surface hover:bg-ps-recessed text-white border border-ps-border rounded-lg text-[11px] font-mono font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                   >
                     Pagar Todo ({formatCurrency(cardSummary.totalDebt)})
                   </button>
@@ -189,8 +189,8 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
 
           {/* Cuenta Pagadora */}
           <div>
-            <label htmlFor="pay-from-select" className="block text-xs font-semibold text-slate-300 mb-1">
-              Pagar desde Cuenta Líquida
+            <label htmlFor="pay-from-select" className="block text-xs font-mono font-semibold text-ps-muted mb-1">
+              Pagar desde Cuenta Liquida
             </label>
             <select
               id="pay-from-select"
@@ -199,7 +199,7 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
                 setSelectedFromId(e.target.value)
                 if (validationError) setValidationError(null)
               }}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-indigo-500"
+              className="w-full bg-ps-recessed border border-ps-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent focus:border-ps-accent font-mono"
             >
               {liquidAccounts.map(a => {
                 const bal = getAccountRealBalance(a, transactions)
@@ -214,11 +214,11 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
 
           {/* Monto a transferir/pagar */}
           <div>
-            <label htmlFor="pay-amount-input" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+            <label htmlFor="pay-amount-input" className="block text-xs font-mono font-semibold text-ps-muted uppercase tracking-wider mb-1">
               Monto del Pago ($)
             </label>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-lg">$</span>
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ps-muted font-bold text-lg font-mono">$</span>
               <input
                 id="pay-amount-input"
                 type="number"
@@ -230,7 +230,7 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
                   setAmount(e.target.value)
                   if (validationError) setValidationError(null)
                 }}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-3 text-xl font-bold text-white tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-indigo-500 transition-colors"
+                className="w-full bg-ps-recessed border border-ps-border rounded-xl pl-9 pr-4 py-3 text-xl font-bold font-mono text-white tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent focus:border-ps-accent transition-colors"
               />
             </div>
           </div>
@@ -239,13 +239,13 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white rounded-xl transition-colors"
+              className="px-4 py-2 text-xs font-mono font-semibold text-ps-muted hover:text-white rounded-xl transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all shadow-sm flex items-center space-x-1.5"
+              className="px-5 py-2.5 text-xs font-mono font-bold text-ps-bg bg-ps-accent hover:bg-white rounded-xl transition-all shadow-sm flex items-center space-x-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <CheckCircle className="w-4 h-4" />
               <span>Confirmar Pago de Tarjeta</span>

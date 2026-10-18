@@ -91,32 +91,32 @@ export const AnalyticsView: React.FC = () => {
   return (
     <div className="space-y-8 pb-20 md:pb-8">
       <div>
-        <h1 className="text-xl font-bold text-white tracking-tight">Análisis & Gráficos</h1>
-        <p className="text-xs text-slate-400 mt-1">
-          Distribución de gastos por categoría y evolución histórica de tus finanzas
+        <h1 className="text-xl font-bold text-white tracking-tight font-mono">Analisis y Graficos</h1>
+        <p className="text-xs text-ps-muted mt-1">
+          Distribucion de gastos por categoria y evolucion historica de tus finanzas
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 1. Gráfico de Categorías */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+        {/* 1. Grafico de Categorias */}
+        <div className="bg-ps-surface border border-ps-border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-2">
-                <PieChart className="w-5 h-5 text-emerald-400" />
-                <h2 className="text-base font-semibold text-white">Distribución de Gastos</h2>
+                <PieChart className="w-5 h-5 text-ps-accent" />
+                <h2 className="text-base font-bold text-white font-mono">Distribucion de Gastos</h2>
               </div>
-              <span className="text-xs text-slate-400 font-medium">Período {selectedMonth}</span>
+              <span className="text-xs text-ps-muted font-mono font-medium">Periodo {selectedMonth}</span>
             </div>
 
             {categoryBreakdown.categories.length === 0 ? (
-              <div className="py-16 text-center text-slate-400 text-sm">
-                No hay gastos registrados en este período.
+              <div className="py-16 text-center text-ps-muted font-mono text-sm">
+                No hay gastos registrados en este periodo.
               </div>
             ) : (
               <div className="space-y-4">
                 {/* Visual Donut / Segmented bar representation */}
-                <div className="w-full bg-slate-950 rounded-xl h-4 flex overflow-hidden border border-slate-800/80">
+                <div className="w-full bg-ps-recessed rounded-xl h-4 flex overflow-hidden border border-ps-border/80">
                   {categoryBreakdown.categories.map(cat => (
                     <div
                       key={cat.name}
@@ -127,20 +127,20 @@ export const AnalyticsView: React.FC = () => {
                   ))}
                 </div>
 
-                {/* Lista de Categorías */}
-                <div className="divide-y divide-slate-800/80 mt-4">
+                {/* Lista de Categorias */}
+                <div className="divide-y divide-ps-border/70 mt-4">
                   {categoryBreakdown.categories.map(cat => (
-                    <div key={cat.name} className="py-2.5 flex items-center justify-between text-xs">
+                    <div key={cat.name} className="py-2.5 flex items-center justify-between text-xs font-mono">
                       <div className="flex items-center space-x-2.5">
                         <span
                           className="w-3 h-3 rounded-full flex-shrink-0"
                           style={{ backgroundColor: cat.color }}
                         ></span>
-                        <span className="text-slate-200 font-medium">{cat.name}</span>
+                        <span className="text-white font-medium">{cat.name}</span>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <span className="text-slate-400 tabular-nums">{cat.percentage}%</span>
-                        <span className="font-semibold text-slate-100 tabular-nums">
+                        <span className="text-ps-muted tabular-nums">{cat.percentage}%</span>
+                        <span className="font-bold text-white tabular-nums">
                           {fmt(cat.amount)}
                         </span>
                       </div>
@@ -151,36 +151,36 @@ export const AnalyticsView: React.FC = () => {
             )}
           </div>
 
-          <div className="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-            <span>Total Gastos del Período:</span>
-            <strong className="text-rose-400 font-bold text-sm tabular-nums">
+          <div className="pt-4 mt-4 border-t border-ps-border/70 flex items-center justify-between text-xs text-ps-muted font-mono">
+            <span>Total Gastos del Periodo:</span>
+            <strong className="text-ps-danger font-bold text-sm tabular-nums">
               {fmt(categoryBreakdown.totalExpenses)}
             </strong>
           </div>
         </div>
 
-        {/* 2. Evolución Semestral (Barras Ingresos vs Gastos) */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+        {/* 2. Evolucion Semestral (Barras Ingresos vs Gastos) */}
+        <div className="bg-ps-surface border border-ps-border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-2">
-                <TrendingUp className="w-5 h-5 text-indigo-400" />
-                <h2 className="text-base font-semibold text-white">Evolución de Últimos 6 Meses</h2>
+                <TrendingUp className="w-5 h-5 text-ps-accent" />
+                <h2 className="text-base font-bold text-white font-mono">Evolucion de Ultimos 6 Meses</h2>
               </div>
-              <div className="flex items-center space-x-3 text-[11px]">
+              <div className="flex items-center space-x-3 text-[11px] font-mono">
                 <span className="flex items-center space-x-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-                  <span className="text-slate-300">Ingresos</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-ps-accent inline-block"></span>
+                  <span className="text-ps-muted">Ingresos</span>
                 </span>
                 <span className="flex items-center space-x-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
-                  <span className="text-slate-300">Gastos</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-ps-danger inline-block"></span>
+                  <span className="text-ps-muted">Gastos</span>
                 </span>
               </div>
             </div>
 
-            {/* Gráfico de barras personalizado SVG / CSS */}
-            <div className="h-56 flex items-end justify-between gap-3 pt-6 pb-2 border-b border-slate-800">
+            {/* Grafico de barras personalizado SVG / CSS */}
+            <div className="h-56 flex items-end justify-between gap-3 pt-6 pb-2 border-b border-ps-border/70">
               {monthlyHistory.map(m => {
                 const incomeHeight = maxChartValue > 0 ? (m.income / maxChartValue) * 100 : 0
                 const expenseHeight = maxChartValue > 0 ? (m.expense / maxChartValue) * 100 : 0
@@ -190,19 +190,19 @@ export const AnalyticsView: React.FC = () => {
                     <div className="w-full flex items-end justify-center gap-1.5 h-full">
                       {/* Barra Ingreso */}
                       <div
-                        className="w-3.5 sm:w-4 bg-emerald-500 rounded-t transition-all group-hover:brightness-110"
+                        className="w-3.5 sm:w-4 bg-ps-accent rounded-t transition-all group-hover:brightness-125"
                         style={{ height: `${Math.max(4, incomeHeight)}%` }}
-                        title={`${m.monthLabel} - Ingresos: ${fmt(m.income)}`}
+                        title={`${m.monthLabel}: Ingresos ${fmt(m.income)}`}
                       ></div>
 
                       {/* Barra Gasto */}
                       <div
-                        className="w-3.5 sm:w-4 bg-rose-500 rounded-t transition-all group-hover:brightness-110"
+                        className="w-3.5 sm:w-4 bg-ps-danger rounded-t transition-all group-hover:brightness-125"
                         style={{ height: `${Math.max(4, expenseHeight)}%` }}
-                        title={`${m.monthLabel} - Gastos: ${fmt(m.expense)}`}
+                        title={`${m.monthLabel}: Gastos ${fmt(m.expense)}`}
                       ></div>
                     </div>
-                    <span className="text-[11px] font-medium text-slate-400 capitalize mt-2">
+                    <span className="text-[11px] font-mono font-medium text-ps-muted capitalize mt-2">
                       {m.monthLabel}
                     </span>
                   </div>
@@ -211,30 +211,30 @@ export const AnalyticsView: React.FC = () => {
             </div>
           </div>
 
-          <div className="pt-4 text-xs text-slate-400 flex items-center justify-between">
+          <div className="pt-4 text-xs text-ps-muted flex items-center justify-between font-mono">
             <span>Mes actual vs Mes previo</span>
-            <span className="text-emerald-400 font-medium">Control de flujo en tiempo real</span>
+            <span className="text-ps-accent font-semibold">Control de flujo en tiempo real</span>
           </div>
         </div>
       </div>
 
       {/* 3. Top Gastos Individuales */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
-        <h2 className="text-base font-semibold text-white mb-4">Mayores Gastos del Mes</h2>
+      <div className="bg-ps-surface border border-ps-border rounded-2xl p-6 shadow-sm">
+        <h2 className="text-base font-bold text-white mb-4 font-mono">Mayores Gastos del Mes</h2>
         {topExpenses.length === 0 ? (
-          <div className="text-slate-400 text-xs py-4 text-center">No hay gastos en el período</div>
+          <div className="text-ps-muted text-xs py-4 text-center font-mono">No hay gastos en el periodo</div>
         ) : (
-          <div className="divide-y divide-slate-800/80">
+          <div className="divide-y divide-ps-border/70">
             {topExpenses.map((exp, idx) => (
-              <div key={exp.id} className="py-2.5 flex items-center justify-between text-xs">
+              <div key={exp.id} className="py-2.5 flex items-center justify-between text-xs font-mono">
                 <div className="flex items-center space-x-3">
-                  <span className="text-slate-500 font-bold w-4">{idx + 1}.</span>
+                  <span className="text-ps-muted font-bold w-4">{idx + 1}.</span>
                   <div>
-                    <span className="font-medium text-slate-200">{exp.description}</span>
-                    <span className="text-slate-400 ml-2">({exp.category})</span>
+                    <span className="font-semibold text-white">{exp.description}</span>
+                    <span className="text-ps-muted ml-2">({exp.category})</span>
                   </div>
                 </div>
-                <div className="font-bold text-rose-400 tabular-nums">
+                <div className="font-bold text-ps-danger tabular-nums">
                   {fmt(exp.amount)}
                 </div>
               </div>

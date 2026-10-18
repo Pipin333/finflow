@@ -194,19 +194,19 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
       role="dialog" 
       aria-modal="true" 
       aria-labelledby="setup-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ps-bg/85 backdrop-blur-md overflow-y-auto"
     >
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl my-6 flex flex-col">
+      <div className="bg-ps-surface border-2 border-ps-border rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl my-6 flex flex-col font-mono">
         {/* Cabecera del Setup */}
-        <div className="p-6 bg-slate-950 border-b border-slate-800/80">
+        <div className="p-6 bg-ps-surface border-b border-ps-border/70">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <div className="w-10 h-10 rounded-2xl bg-ps-recessed border border-ps-border flex items-center justify-center text-ps-accent">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <h1 id="setup-modal-title" className="text-lg font-bold text-white tracking-tight">Bienvenido a FinFlow</h1>
-                <p className="text-xs text-slate-400">Asistente de configuración inicial</p>
+                <h1 id="setup-modal-title" className="text-lg font-bold text-white tracking-tight font-mono">Bienvenido a FinFlow</h1>
+                <p className="text-xs text-ps-muted">Asistente de configuracion inicial</p>
               </div>
             </div>
 
@@ -216,7 +216,7 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
                 <div
                   key={s}
                   className={`w-6 h-1.5 rounded-full transition-all ${
-                    step === s ? 'bg-emerald-500 w-8' : step > s ? 'bg-emerald-500/40' : 'bg-slate-800'
+                    step === s ? 'bg-ps-accent w-8' : step > s ? 'bg-ps-accent/50' : 'bg-ps-recessed'
                   }`}
                 />
               ))}
@@ -231,11 +231,11 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
             <div className="space-y-4">
               <div>
                 <h2 className="text-base font-bold text-white flex items-center space-x-2">
-                  <Coins className="w-5 h-5 text-emerald-400" />
+                  <Coins className="w-5 h-5 text-ps-accent" />
                   <span>Elige tu Moneda Principal</span>
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">
-                  Se utilizará para mostrar los balances, presupuestos y reportes.
+                <p className="text-xs text-ps-muted mt-1">
+                  Se utilizara para mostrar los balances, presupuestos y reportes.
                 </p>
               </div>
 
@@ -245,10 +245,10 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
                     key={opt.value}
                     type="button"
                     onClick={() => setCurrency(opt.value)}
-                    className={`p-3 rounded-xl border text-left text-xs font-semibold transition-all ${
+                    className={`p-3 rounded-xl border text-left text-xs font-bold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent ${
                       currency === opt.value
-                        ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
-                        : 'bg-slate-950 border-slate-800 text-slate-300 hover:bg-slate-800/60'
+                        ? 'bg-ps-recessed border-ps-accent text-ps-accent'
+                        : 'bg-ps-recessed border-ps-border text-white hover:bg-ps-surface'
                     }`}
                   >
                     {opt.label}
@@ -256,40 +256,40 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
                 ))}
               </div>
 
-              <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-xl text-xs flex items-center space-x-3 text-slate-400">
-                <ShieldCheck className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+              <div className="p-3.5 bg-ps-recessed border border-ps-border rounded-xl text-xs flex items-center space-x-3 text-ps-muted">
+                <ShieldCheck className="w-5 h-5 text-ps-accent flex-shrink-0" />
                 <span>
-                  Privacidad total: Todo se almacena localmente en tu navegador. Tus números son sólo tuyos.
+                  Privacidad total: Todo se almacena localmente en tu navegador. Tus numeros son solo tuyos.
                 </span>
               </div>
             </div>
           )}
 
-          {/* PASO 2: Cuentas Líquidas */}
+          {/* PASO 2: Cuentas Liquidas */}
           {step === 2 && (
             <div className="space-y-4">
               <div>
                 <h2 className="text-base font-bold text-white flex items-center space-x-2">
-                  <Wallet className="w-5 h-5 text-emerald-400" />
+                  <Wallet className="w-5 h-5 text-ps-accent" />
                   <span>Configura tus Cuentas y Efectivo</span>
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-ps-muted mt-1">
                   Ingresa tus cuentas bancarias o cajas de ahorro y su saldo disponible actual.
                 </p>
               </div>
 
               <div className="space-y-3 max-h-[320px] overflow-y-auto pr-1">
                 {liquidAccounts.map((acc, index) => (
-                  <div key={acc.id} className="p-3.5 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+                  <div key={acc.id} className="p-3.5 bg-ps-recessed border border-ps-border rounded-xl space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-300 uppercase">
+                      <span className="text-xs font-bold text-white uppercase">
                         Cuenta #{index + 1}
                       </span>
                       {liquidAccounts.length > 1 && (
                         <button
                           type="button"
                           onClick={() => handleRemoveLiquidAccount(acc.id)}
-                          className="p-1 text-slate-500 hover:text-rose-400 transition-colors"
+                          className="p-1 text-ps-muted hover:text-ps-danger transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-danger rounded"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -298,7 +298,7 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       <div>
-                        <label className="block text-[11px] font-semibold text-slate-400 mb-1">Nombre</label>
+                        <label className="block text-[11px] font-semibold text-ps-muted mb-1">Nombre</label>
                         <input
                           type="text"
                           value={acc.name}
@@ -307,19 +307,19 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
                             setLiquidAccounts(prev => prev.map(a => a.id === acc.id ? { ...a, name: val } : a))
                           }}
                           placeholder="Ej: Banco Galicia, Efectivo..."
-                          className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white"
+                          className="w-full bg-ps-surface border border-ps-border rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-[11px] font-semibold text-slate-400 mb-1">Tipo</label>
+                        <label className="block text-[11px] font-semibold text-ps-muted mb-1">Tipo</label>
                         <select
                           value={acc.type}
                           onChange={e => {
                             const val = e.target.value as AccountType
                             setLiquidAccounts(prev => prev.map(a => a.id === acc.id ? { ...a, type: val } : a))
                           }}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white"
+                          className="w-full bg-ps-surface border border-ps-border rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                         >
                           <option value="checking">Cuenta Corriente</option>
                           <option value="savings">Caja de Ahorro</option>
@@ -329,7 +329,7 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                      <label className="block text-[11px] font-semibold text-ps-muted mb-1">
                         Saldo Inicial Disponible ({currency})
                       </label>
                       <input
@@ -341,7 +341,7 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
                           setLiquidAccounts(prev => prev.map(a => a.id === acc.id ? { ...a, balance: val } : a))
                         }}
                         placeholder="0"
-                        className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono"
+                        className="w-full bg-ps-surface border border-ps-border rounded-lg px-2.5 py-1.5 text-xs text-white font-mono focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                       />
                     </div>
                   </div>
@@ -351,53 +351,53 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
               <button
                 type="button"
                 onClick={handleAddLiquidAccount}
-                className="w-full py-2 bg-slate-950 hover:bg-slate-800 border border-dashed border-slate-700 rounded-xl text-xs font-semibold text-slate-300 flex items-center justify-center space-x-1.5 transition-colors"
+                className="w-full py-2 bg-ps-recessed hover:bg-ps-surface border border-dashed border-ps-borderLight rounded-xl text-xs font-bold text-ps-accent flex items-center justify-center space-x-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
               >
                 <Plus className="w-3.5 h-3.5" />
-                <span>Agregar Otra Cuenta Líquida</span>
+                <span>Agregar Otra Cuenta Liquida</span>
               </button>
             </div>
           )}
 
-          {/* PASO 3: Tarjetas de Crédito */}
+          {/* PASO 3: Tarjetas de Credito */}
           {step === 3 && (
             <div className="space-y-4">
               <div>
                 <h2 className="text-base font-bold text-white flex items-center space-x-2">
-                  <CreditCard className="w-5 h-5 text-indigo-400" />
-                  <span>Tarjetas de Crédito & Ciclos de Cobro</span>
+                  <CreditCard className="w-5 h-5 text-ps-accent" />
+                  <span>Tarjetas de Credito y Ciclos de Cobro</span>
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-ps-muted mt-1">
                   Lleva control de tus compras en cuotas, fechas de corte y vencimientos.
                 </p>
               </div>
 
-              <div className="flex items-center space-x-3 p-3 bg-slate-950 border border-slate-800 rounded-xl">
+              <div className="flex items-center space-x-3 p-3 bg-ps-recessed border border-ps-border rounded-xl">
                 <input
                   type="checkbox"
                   id="hasCC"
                   checked={hasCreditCard}
                   onChange={e => setHasCreditCard(e.target.checked)}
-                  className="rounded bg-slate-900 border-slate-700 text-indigo-500 focus:ring-indigo-500/20"
+                  className="rounded bg-ps-surface border-ps-border text-ps-accent focus:ring-ps-accent focus:ring-offset-0"
                 />
-                <label htmlFor="hasCC" className="text-xs font-semibold text-slate-200 cursor-pointer">
-                  Sí, utilizo tarjetas de crédito para mis gastos
+                <label htmlFor="hasCC" className="text-xs font-semibold text-white cursor-pointer">
+                  Si, utilizo tarjetas de credito para mis gastos
                 </label>
               </div>
 
               {hasCreditCard && (
                 <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
                   {creditCards.map((card, index) => (
-                    <div key={card.id} className="p-3.5 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+                    <div key={card.id} className="p-3.5 bg-ps-recessed border border-ps-border rounded-xl space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-indigo-300 uppercase">
+                        <span className="text-xs font-bold text-ps-accent uppercase">
                           Tarjeta #{index + 1}
                         </span>
                         {creditCards.length > 1 && (
                           <button
                             type="button"
                             onClick={() => handleRemoveCreditCard(card.id)}
-                            className="p-1 text-slate-500 hover:text-rose-400 transition-colors"
+                            className="p-1 text-ps-muted hover:text-ps-danger transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-danger rounded"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -406,7 +406,7 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
-                          <label className="block text-[11px] font-semibold text-slate-400 mb-1">Nombre</label>
+                          <label className="block text-[11px] font-semibold text-ps-muted mb-1">Nombre</label>
                           <input
                             type="text"
                             value={card.name}
@@ -415,12 +415,12 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
                               setCreditCards(prev => prev.map(c => c.id === card.id ? { ...c, name: val } : c))
                             }}
                             placeholder="Ej: Visa Santander, Mastercard..."
-                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white"
+                            className="w-full bg-ps-surface border border-ps-border rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-[11px] font-semibold text-slate-400 mb-1">Límite de Crédito Total</label>
+                          <label className="block text-[11px] font-semibold text-ps-muted mb-1">Limite de Credito Total</label>
                           <input
                             type="number"
                             step="any"
@@ -430,16 +430,16 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
                               setCreditCards(prev => prev.map(c => c.id === card.id ? { ...c, creditLimit: val } : c))
                             }}
                             placeholder="1000000"
-                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono"
+                            className="w-full bg-ps-surface border border-ps-border rounded-lg px-2.5 py-1.5 text-xs text-white font-mono focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                           />
                         </div>
                       </div>
 
-                      {/* Ciclo de facturación */}
-                      <div className="grid grid-cols-2 gap-2.5 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/50">
+                      {/* Ciclo de facturacion */}
+                      <div className="grid grid-cols-2 gap-2.5 bg-ps-surface p-2.5 rounded-lg border border-ps-border/70">
                         <div>
-                          <label className="block text-[10px] font-semibold text-amber-400 mb-1">
-                            Día de Cierre (Corte)
+                          <label className="block text-[10px] font-semibold text-ps-warning mb-1">
+                            Dia de Cierre (Corte)
                           </label>
                           <input
                             type="number"
@@ -450,13 +450,13 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
                               const val = Number(e.target.value)
                               setCreditCards(prev => prev.map(c => c.id === card.id ? { ...c, statementClosingDay: val } : c))
                             }}
-                            className="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white"
+                            className="w-full bg-ps-recessed border border-ps-border rounded px-2 py-1 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-semibold text-rose-400 mb-1">
-                            Día de Vencimiento
+                          <label className="block text-[10px] font-semibold text-ps-danger mb-1">
+                            Dia de Vencimiento
                           </label>
                           <input
                             type="number"
@@ -467,7 +467,7 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
                               const val = Number(e.target.value)
                               setCreditCards(prev => prev.map(c => c.id === card.id ? { ...c, paymentDueDay: val } : c))
                             }}
-                            className="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white"
+                            className="w-full bg-ps-recessed border border-ps-border rounded px-2 py-1 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                           />
                         </div>
                       </div>
@@ -477,10 +477,10 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
                   <button
                     type="button"
                     onClick={handleAddCreditCard}
-                    className="w-full py-2 bg-slate-950 hover:bg-slate-800 border border-dashed border-slate-700 rounded-xl text-xs font-semibold text-slate-300 flex items-center justify-center space-x-1.5 transition-colors"
+                    className="w-full py-2 bg-ps-recessed hover:bg-ps-surface border border-dashed border-ps-borderLight rounded-xl text-xs font-bold text-ps-accent flex items-center justify-center space-x-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>Agregar Otra Tarjeta de Crédito</span>
+                    <span>Agregar Otra Tarjeta de Credito</span>
                   </button>
                 </div>
               )}
@@ -490,30 +490,30 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
           {/* PASO 4: Resumen y Listo */}
           {step === 4 && (
             <div className="space-y-4 text-center py-4">
-              <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto">
+              <div className="w-14 h-14 bg-ps-recessed border border-ps-border text-ps-accent rounded-2xl flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
 
               <div>
-                <h2 className="text-xl font-bold text-white">¡Todo Listo para Comenzar!</h2>
-                <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-                  Tu sistema financiero está configurado desde cero y listo para registrar tus movimientos reales.
+                <h2 className="text-xl font-bold text-white font-mono">Todo Listo para Comenzar</h2>
+                <p className="text-xs text-ps-muted mt-1 max-w-sm mx-auto">
+                  Tu sistema financiero esta configurado desde cero y listo para registrar tus movimientos reales.
                 </p>
               </div>
 
-              <div className="p-4 bg-slate-950 border border-slate-800 rounded-2xl text-left text-xs space-y-2.5 max-w-sm mx-auto">
+              <div className="p-4 bg-ps-recessed border border-ps-border rounded-2xl text-left text-xs space-y-2.5 max-w-sm mx-auto font-mono">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Moneda:</span>
-                  <span className="font-bold text-slate-200">{currency}</span>
+                  <span className="text-ps-muted">Moneda:</span>
+                  <span className="font-bold text-white">{currency}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Cuentas Líquidas:</span>
-                  <span className="font-bold text-emerald-400">{liquidAccounts.length} configuradas</span>
+                  <span className="text-ps-muted">Cuentas Liquidas:</span>
+                  <span className="font-bold text-ps-accent">{liquidAccounts.length} configuradas</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Tarjetas de Crédito:</span>
-                  <span className="font-bold text-indigo-400">
-                    {hasCreditCard ? `${creditCards.length} con ciclos de facturación` : 'Ninguna'}
+                  <span className="text-ps-muted">Tarjetas de Credito:</span>
+                  <span className="font-bold text-ps-warning">
+                    {hasCreditCard ? `${creditCards.length} con ciclos de facturacion` : 'Ninguna'}
                   </span>
                 </div>
               </div>
@@ -521,16 +521,16 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
           )}
         </div>
 
-        {/* Pie de navegación entre pasos */}
-        <div className="p-5 bg-slate-950 border-t border-slate-800 flex items-center justify-between">
+        {/* Pie de navegacion entre pasos */}
+        <div className="p-5 bg-ps-surface border-t border-ps-border/70 flex items-center justify-between font-mono">
           {step > 1 ? (
             <button
               type="button"
               onClick={() => setStep(step - 1)}
-              className="inline-flex items-center space-x-1.5 px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white rounded-xl transition-colors"
+              className="inline-flex items-center space-x-1.5 px-4 py-2 text-xs font-semibold text-ps-muted hover:text-white rounded-xl transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Atrás</span>
+              <span>Atras</span>
             </button>
           ) : (
             <div />
@@ -540,7 +540,7 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
             <button
               type="button"
               onClick={() => setStep(step + 1)}
-              className="inline-flex items-center space-x-1.5 px-5 py-2.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all shadow-sm"
+              className="inline-flex items-center space-x-1.5 px-5 py-2.5 text-xs font-bold text-ps-bg bg-ps-accent hover:bg-white rounded-xl transition-all shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <span>Continuar</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -549,7 +549,7 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
             <button
               type="button"
               onClick={handleFinish}
-              className="inline-flex items-center space-x-1.5 px-6 py-2.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 active:scale-95 rounded-xl transition-all shadow-sm"
+              className="inline-flex items-center space-x-1.5 px-6 py-2.5 text-xs font-bold text-ps-bg bg-ps-accent hover:bg-white active:scale-95 rounded-xl transition-all shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <Sparkles className="w-4 h-4" />
               <span>Comenzar a usar FinFlow</span>

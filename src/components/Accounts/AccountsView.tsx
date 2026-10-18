@@ -64,30 +64,30 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
       {/* Encabezado */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">Cuentas y Tarjetas</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Gestiona tus saldos líquidos, límites de tarjetas de crédito y ciclos de facturación
+          <h1 className="text-xl font-bold text-white tracking-tight font-mono">Cuentas y Tarjetas</h1>
+          <p className="text-xs text-ps-muted mt-1">
+            Gestiona tus saldos liquidos, limites de tarjetas de credito y ciclos de facturacion
           </p>
         </div>
         <button
           onClick={onOpenNewAccount}
-          className="inline-flex items-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-semibold transition-all shadow-sm"
+          className="inline-flex items-center space-x-2 px-4 py-2 bg-ps-accent hover:bg-white text-ps-bg font-bold font-mono rounded-xl text-sm transition-all shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
         >
           <Plus className="w-4 h-4" />
           <span>Nueva Cuenta o Tarjeta</span>
         </button>
       </div>
 
-      {/* 1. Tarjetas de Crédito */}
+      {/* 1. Tarjetas de Credito */}
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
-          <CreditCard className="w-5 h-5 text-indigo-400" />
-          <h2 className="text-base font-semibold text-white">Tarjetas de Crédito & Líneas de Financiamiento</h2>
+          <CreditCard className="w-5 h-5 text-ps-accent" />
+          <h2 className="text-base font-bold text-white font-mono">Tarjetas de Credito y Lineas de Financiamiento</h2>
         </div>
 
         {creditAccounts.length === 0 ? (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-400 text-xs">
-            No tienes tarjetas de crédito configuradas. Pulsa "Nueva Cuenta o Tarjeta" si utilizas tarjeta.
+          <div className="bg-ps-surface border border-ps-border rounded-2xl p-8 text-center text-ps-muted text-xs">
+            No tienes tarjetas de credito configuradas. Pulsa "Nueva Cuenta o Tarjeta" si utilizas tarjeta.
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -101,33 +101,33 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
               return (
                 <div
                   key={card.id}
-                  className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between"
+                  className="bg-ps-surface border border-ps-border rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between"
                 >
-                  {/* Aspecto de tarjeta bancaria moderna */}
+                  {/* Aspecto de tarjeta bancaria terminal */}
                   <div
                     className="p-6 text-white relative overflow-hidden"
                     style={{
-                      background: `linear-gradient(135deg, ${card.color} 0%, #090d16 100%)`,
+                      background: `linear-gradient(135deg, ${card.color} 0%, #061d47 100%)`,
                     }}
                   >
                     <div className="flex items-start justify-between relative z-10">
                       <div>
-                        <span className="text-[10px] uppercase font-bold tracking-widest text-slate-300/80">
-                          {card.institution || 'Tarjeta de Crédito'}
+                        <span className="text-[10px] uppercase font-mono font-bold tracking-widest text-ps-muted">
+                          {card.institution || 'Tarjeta de Credito'}
                         </span>
-                        <h3 className="text-lg font-bold tracking-tight text-white mt-0.5">{card.name}</h3>
+                        <h3 className="text-lg font-bold font-mono tracking-tight text-white mt-0.5">{card.name}</h3>
                       </div>
                       <div className="flex items-center space-x-1">
                         <button
                           onClick={() => onEditAccount(card)}
-                          className="p-1.5 text-slate-300 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg transition-colors"
+                          className="p-1.5 text-white/80 hover:text-white bg-black/30 hover:bg-black/50 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
                           title="Editar tarjeta"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDelete(card)}
-                          className="p-1.5 text-slate-300 hover:text-rose-300 bg-black/20 hover:bg-black/40 rounded-lg transition-colors"
+                          className="p-1.5 text-white/80 hover:text-ps-danger bg-black/30 hover:bg-black/50 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
                           title="Eliminar tarjeta"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -137,78 +137,78 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
 
                     <div className="mt-6 flex items-end justify-between relative z-10">
                       <div>
-                        <div className="text-[11px] text-slate-300/90 font-medium uppercase">Deuda Total Comprometida</div>
-                        <div className="text-2xl font-extrabold text-white tabular-nums">
+                        <div className="text-[11px] text-ps-muted font-mono font-medium uppercase">Deuda Total Comprometida</div>
+                        <div className="text-2xl font-extrabold font-mono text-white tabular-nums">
                           {fmt(stmt.totalDebt)}
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-[10px] text-slate-300/90 uppercase font-medium">Límite Total</div>
-                        <div className="text-sm font-semibold text-slate-200 tabular-nums">
+                        <div className="text-[10px] text-ps-muted font-mono uppercase font-medium">Limite Total</div>
+                        <div className="text-sm font-semibold font-mono text-white tabular-nums">
                           {fmt(card.creditLimit || 0)}
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Cuerpo de la tarjeta con ciclo de facturación y cuotas */}
-                  <div className="p-6 space-y-4 bg-slate-900 flex-1 flex flex-col justify-between">
-                    {/* Ciclo de facturación */}
-                    <div className="grid grid-cols-2 gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800/80">
+                  {/* Cuerpo de la tarjeta con ciclo de facturacion y cuotas */}
+                  <div className="p-6 space-y-4 bg-ps-surface flex-1 flex flex-col justify-between">
+                    {/* Ciclo de facturacion */}
+                    <div className="grid grid-cols-2 gap-3 bg-ps-recessed p-3 rounded-xl border border-ps-border/70">
                       <div>
-                        <div className="flex items-center space-x-1 text-slate-400 text-[11px]">
-                          <Clock className="w-3.5 h-3.5 text-amber-400" />
-                          <span>Corte de Facturación</span>
+                        <div className="flex items-center space-x-1 text-ps-muted text-[11px] font-mono">
+                          <Clock className="w-3.5 h-3.5 text-ps-warning" />
+                          <span>Corte de Facturacion</span>
                         </div>
-                        <div className="text-sm font-semibold text-slate-100 mt-1">
+                        <div className="text-sm font-semibold font-mono text-white mt-1">
                           {stmt.closingDateStr}
                         </div>
-                        <div className="text-[10px] text-amber-400 font-medium">
-                          {stmt.daysUntilClosing === 0 ? 'Cierra hoy' : `Faltan ${stmt.daysUntilClosing} días`}
+                        <div className="text-[10px] font-mono text-ps-warning font-medium">
+                          {stmt.daysUntilClosing === 0 ? 'Cierra hoy' : `Faltan ${stmt.daysUntilClosing} dias`}
                         </div>
                       </div>
 
                       <div>
-                        <div className="flex items-center space-x-1 text-slate-400 text-[11px]">
-                          <Calendar className="w-3.5 h-3.5 text-rose-400" />
+                        <div className="flex items-center space-x-1 text-ps-muted text-[11px] font-mono">
+                          <Calendar className="w-3.5 h-3.5 text-ps-danger" />
                           <span>Vencimiento de Pago</span>
                         </div>
-                        <div className="text-sm font-semibold text-slate-100 mt-1">
+                        <div className="text-sm font-semibold font-mono text-white mt-1">
                           {stmt.dueDateStr}
                         </div>
-                        <div className="text-[10px] text-rose-400 font-medium">
-                          {stmt.daysUntilDue === 0 ? 'Vence hoy' : `Faltan ${stmt.daysUntilDue} días`}
+                        <div className="text-[10px] font-mono text-ps-danger font-medium">
+                          {stmt.daysUntilDue === 0 ? 'Vence hoy' : `Faltan ${stmt.daysUntilDue} dias`}
                         </div>
                       </div>
                     </div>
 
-                    {/* Barra de límite disponible */}
+                    {/* Barra de limite disponible */}
                     <div>
-                      <div className="flex justify-between text-xs text-slate-400 mb-1.5 font-medium">
-                        <span>Disponible: <strong className="text-emerald-400 tabular-nums">{fmt(stmt.availableCredit)}</strong></span>
+                      <div className="flex justify-between text-xs text-ps-muted mb-1.5 font-mono">
+                        <span>Disponible: <strong className="text-ps-accent tabular-nums">{fmt(stmt.availableCredit)}</strong></span>
                         <span className="tabular-nums">Uso: {utilPercent}%</span>
                       </div>
-                      <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800/60">
+                      <div className="w-full bg-ps-recessed rounded-full h-2 overflow-hidden border border-ps-border/60">
                         <div
                           className={`h-full rounded-full transition-all ${
-                            utilPercent > 80 ? 'bg-rose-500' : utilPercent > 50 ? 'bg-amber-500' : 'bg-indigo-500'
+                            utilPercent > 80 ? 'bg-ps-danger' : utilPercent > 50 ? 'bg-ps-warning' : 'bg-ps-accent'
                           }`}
                           style={{ width: `${utilPercent}%` }}
                         ></div>
                       </div>
                     </div>
 
-                    {/* Resumen a pagar y botón pagar */}
-                    <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between">
+                    {/* Resumen a pagar y boton pagar */}
+                    <div className="p-3 bg-ps-recessed border border-ps-border rounded-xl flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-slate-400 block">Total a pagar este resumen</span>
-                        <span className="text-lg font-bold text-rose-400 tabular-nums">
+                        <span className="text-[10px] uppercase font-mono font-bold text-ps-muted block">Total a pagar este resumen</span>
+                        <span className="text-lg font-bold font-mono text-ps-danger tabular-nums">
                           {fmt(stmt.statementTotalToPay)}
                         </span>
                       </div>
                       <button
                         onClick={() => onOpenPayCredit(card.id)}
-                        className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold transition-colors shadow-sm"
+                        className="px-3.5 py-2 bg-ps-surface hover:bg-ps-recessed text-ps-accent border border-ps-accent font-mono rounded-lg text-xs font-bold transition-colors shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                       >
                         Pagar Resumen
                       </button>
@@ -218,7 +218,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                     <div>
                       <button
                         onClick={() => toggleExpand(card.id)}
-                        className="w-full flex items-center justify-between py-2 text-xs font-medium text-slate-300 hover:text-white transition-colors"
+                        className="w-full flex items-center justify-between py-2 text-xs font-mono font-semibold text-ps-muted hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent rounded"
                       >
                         <span>
                           Compras en cuotas activas ({stmt.activeInstallments.length})
@@ -227,30 +227,30 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                       </button>
 
                       {isExpanded && (
-                        <div className="mt-2 space-y-2 pt-2 border-t border-slate-800/70">
+                        <div className="mt-2 space-y-2 pt-2 border-t border-ps-border/70">
                           {stmt.activeInstallments.length === 0 ? (
-                            <div className="text-xs text-slate-400 py-2 text-center">
+                            <div className="text-xs text-ps-muted py-2 text-center font-mono">
                               No hay compras en cuotas activas en esta tarjeta
                             </div>
                           ) : (
                             stmt.activeInstallments.map(item => (
                               <div
                                 key={item.transaction.id}
-                                className="p-2.5 bg-slate-950 rounded-lg text-xs border border-slate-800/60 flex items-center justify-between"
+                                className="p-2.5 bg-ps-recessed rounded-lg text-xs border border-ps-border/70 flex items-center justify-between"
                               >
                                 <div>
-                                  <div className="font-medium text-slate-200">
+                                  <div className="font-semibold text-white">
                                     {item.transaction.description}
                                   </div>
-                                  <div className="text-[10px] text-slate-400 flex items-center space-x-1.5 mt-0.5">
-                                    <span className="text-indigo-400 font-semibold">
+                                  <div className="text-[10px] text-ps-muted flex items-center space-x-1.5 mt-0.5 font-mono">
+                                    <span className="text-ps-accent font-semibold">
                                       Cuota {item.currentInstallment} de {item.totalInstallments}
                                     </span>
                                     <span>&bull;</span>
                                     <span>Resta pagar {fmt(item.remainingAmount)}</span>
                                   </div>
                                 </div>
-                                <div className="text-right font-semibold text-slate-100 tabular-nums">
+                                <div className="text-right font-bold font-mono text-white tabular-nums">
                                   {fmt(item.monthlyAmount)}/mes
                                 </div>
                               </div>
@@ -267,16 +267,16 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
         )}
       </div>
 
-      {/* 2. Cuentas Líquidas y Efectivo */}
+      {/* 2. Cuentas Liquidas y Efectivo */}
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
-          <Wallet className="w-5 h-5 text-emerald-400" />
-          <h2 className="text-base font-semibold text-white">Cuentas Líquidas & Efectivo</h2>
+          <Wallet className="w-5 h-5 text-ps-accent" />
+          <h2 className="text-base font-bold text-white font-mono">Cuentas Liquidas y Efectivo</h2>
         </div>
 
         {liquidAccounts.length === 0 ? (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-400 text-xs">
-            No tienes cuentas líquidas registradas. Pulsa "Nueva Cuenta o Tarjeta" para añadir una.
+          <div className="bg-ps-surface border border-ps-border rounded-2xl p-8 text-center text-ps-muted text-xs font-mono">
+            No tienes cuentas liquidas registradas. Pulsa "Nueva Cuenta o Tarjeta" para anadir una.
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -286,28 +286,28 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
               return (
                 <div
                   key={acc.id}
-                  className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col justify-between"
+                  className="bg-ps-surface border border-ps-border rounded-2xl p-5 shadow-sm flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-start justify-between">
                       <div className="flex items-center space-x-2.5">
                         <span className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: acc.color }}></span>
                         <div>
-                          <h3 className="font-semibold text-sm text-slate-100">{acc.name}</h3>
-                          <span className="text-[11px] text-slate-400">{getAccountTypeName(acc.type)}</span>
+                          <h3 className="font-bold text-sm text-white font-mono">{acc.name}</h3>
+                          <span className="text-[11px] text-ps-muted font-mono">{getAccountTypeName(acc.type)}</span>
                         </div>
                       </div>
                       <div className="flex items-center space-x-1">
                         <button
                           onClick={() => onEditAccount(acc)}
-                          className="p-1 text-slate-400 hover:text-white rounded transition-colors"
+                          className="p-1 text-ps-muted hover:text-white rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                           title="Editar cuenta"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDelete(acc)}
-                          className="p-1 text-slate-400 hover:text-rose-400 rounded transition-colors"
+                          className="p-1 text-ps-muted hover:text-ps-danger rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-danger"
                           title="Eliminar cuenta"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -316,8 +316,8 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                     </div>
 
                     <div className="mt-4">
-                      <span className="text-[11px] text-slate-400 uppercase font-medium">Saldo Disponible</span>
-                      <div className="text-2xl font-bold text-emerald-400 tabular-nums">
+                      <span className="text-[11px] text-ps-muted uppercase font-mono font-medium">Saldo Disponible</span>
+                      <div className="text-2xl font-bold font-mono text-ps-accent tabular-nums">
                         {fmt(balance)}
                       </div>
                     </div>

@@ -91,17 +91,17 @@ export const AccountModal: React.FC<AccountModalProps> = ({
       role="dialog" 
       aria-modal="true" 
       aria-labelledby="account-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ps-bg/85 backdrop-blur-sm overflow-y-auto"
     >
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between p-5 border-b border-slate-800">
-          <h2 id="account-modal-title" className="text-base font-bold text-white">
+      <div className="bg-ps-surface border-2 border-ps-border rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between p-5 border-b border-ps-border/70">
+          <h2 id="account-modal-title" className="text-base font-bold text-white font-mono">
             {accountToEdit ? 'Editar Cuenta o Tarjeta' : 'Nueva Cuenta o Tarjeta'}
           </h2>
           <button
             onClick={onClose}
             aria-label="Cerrar ventana de cuenta"
-            className="p-1.5 text-slate-400 hover:text-white rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 transition-colors"
+            className="p-1.5 text-ps-muted hover:text-white rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -109,14 +109,14 @@ export const AccountModal: React.FC<AccountModalProps> = ({
 
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           {validationError && (
-            <div role="alert" className="p-3 bg-rose-500/15 border border-rose-500/30 rounded-xl text-xs text-rose-300 font-medium">
+            <div role="alert" className="p-3 bg-ps-recessed border border-ps-danger rounded-xl text-xs text-ps-danger font-mono font-medium">
               {validationError}
             </div>
           )}
 
           {/* Nombre */}
           <div>
-            <label htmlFor="account-name" className="block text-xs font-semibold text-slate-300 mb-1">
+            <label htmlFor="account-name" className="block text-xs font-mono font-semibold text-ps-muted mb-1">
               Nombre de la Cuenta / Tarjeta
             </label>
             <input
@@ -129,32 +129,32 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                 setName(e.target.value)
                 if (validationError) setValidationError(null)
               }}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-emerald-500"
+              className="w-full bg-ps-recessed border border-ps-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent focus:border-ps-accent font-mono"
             />
           </div>
 
           {/* Tipo de Cuenta */}
           <div>
-            <label htmlFor="account-type" className="block text-xs font-semibold text-slate-300 mb-1">
+            <label htmlFor="account-type" className="block text-xs font-mono font-semibold text-ps-muted mb-1">
               Tipo
             </label>
             <select
               id="account-type"
               value={type}
               onChange={e => setType(e.target.value as AccountType)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-emerald-500"
+              className="w-full bg-ps-recessed border border-ps-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent focus:border-ps-accent font-mono"
             >
               <option value="checking">Cuenta Corriente (Bancaria)</option>
-              <option value="savings">Caja de Ahorro / Inversión</option>
-              <option value="cash">Efectivo / Billetera Física</option>
-              <option value="credit">Tarjeta de Crédito</option>
-              <option value="credit_line">Línea de Crédito</option>
+              <option value="savings">Caja de Ahorro / Inversion</option>
+              <option value="cash">Efectivo / Billetera Fisica</option>
+              <option value="credit">Tarjeta de Credito</option>
+              <option value="credit_line">Linea de Credito</option>
             </select>
           </div>
 
           {/* Saldo Inicial */}
           <div>
-            <label htmlFor="account-balance" className="block text-xs font-semibold text-slate-300 mb-1">
+            <label htmlFor="account-balance" className="block text-xs font-mono font-semibold text-ps-muted mb-1">
               {isCredit ? 'Deuda Inicial Base ($)' : 'Saldo Inicial Disponible ($)'}
             </label>
             <input
@@ -163,20 +163,20 @@ export const AccountModal: React.FC<AccountModalProps> = ({
               step="any"
               value={balance}
               onChange={e => setBalance(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-emerald-500"
+              className="w-full bg-ps-recessed border border-ps-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent focus:border-ps-accent font-mono"
             />
           </div>
 
-          {/* Configuración de Tarjetas de Crédito */}
+          {/* Configuracion de Tarjetas de Credito */}
           {isCredit && (
-            <div className="p-4 bg-indigo-950/30 border border-indigo-500/30 rounded-xl space-y-3">
-              <span className="text-xs font-bold text-indigo-300 uppercase tracking-wider block">
-                Configuración del Ciclo de la Tarjeta
+            <div className="p-4 bg-ps-recessed border border-ps-border rounded-xl space-y-3 font-mono">
+              <span className="text-xs font-bold text-ps-accent uppercase tracking-wider block">
+                Configuracion del Ciclo de la Tarjeta
               </span>
 
               <div>
-                <label htmlFor="account-credit-limit" className="block text-xs text-slate-300 mb-1">
-                  Límite de Crédito Total ($)
+                <label htmlFor="account-credit-limit" className="block text-xs text-ps-muted mb-1">
+                  Limite de Credito Total ($)
                 </label>
                 <input
                   id="account-credit-limit"
@@ -185,14 +185,14 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                   value={creditLimit}
                   onChange={e => setCreditLimit(e.target.value)}
                   placeholder="Ej: 1500000"
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  className="w-full bg-ps-surface border border-ps-border rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label htmlFor="account-closing-day" className="block text-xs text-slate-300 mb-1">
-                    Día de Cierre (Corte)
+                  <label htmlFor="account-closing-day" className="block text-xs text-ps-muted mb-1">
+                    Dia de Cierre (Corte)
                   </label>
                   <input
                     id="account-closing-day"
@@ -201,14 +201,14 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                     max={31}
                     value={statementClosingDay}
                     onChange={e => setStatementClosingDay(Number(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                    className="w-full bg-ps-surface border border-ps-border rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                   />
-                  <span className="text-[10px] text-slate-400 mt-0.5 block">Día de fin de ciclo</span>
+                  <span className="text-[10px] text-ps-muted mt-0.5 block">Dia de fin de ciclo</span>
                 </div>
 
                 <div>
-                  <label htmlFor="account-due-day" className="block text-xs text-slate-300 mb-1">
-                    Día de Vencimiento (Pago)
+                  <label htmlFor="account-due-day" className="block text-xs text-ps-muted mb-1">
+                    Dia de Vencimiento (Pago)
                   </label>
                   <input
                     id="account-due-day"
@@ -217,32 +217,32 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                     max={31}
                     value={paymentDueDay}
                     onChange={e => setPaymentDueDay(Number(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                    className="w-full bg-ps-surface border border-ps-border rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
                   />
-                  <span className="text-[10px] text-slate-400 mt-0.5 block">Día límite para pagar</span>
+                  <span className="text-[10px] text-ps-muted mt-0.5 block">Dia limite para pagar</span>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Institución o Banco */}
+          {/* Institucion o Banco */}
           <div>
-            <label htmlFor="account-institution" className="block text-xs font-semibold text-slate-300 mb-1">
-              Institución / Banco Emisor (Opcional)
+            <label htmlFor="account-institution" className="block text-xs font-mono font-semibold text-ps-muted mb-1">
+              Institucion / Banco Emisor (Opcional)
             </label>
             <input
               id="account-institution"
               type="text"
-              placeholder="Ej: Santander, BBVA, Mercado Pago..."
+              placeholder="Ej: Santander, BBVA, Banco de Chile..."
               value={institution}
               onChange={e => setInstitution(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-emerald-500"
+              className="w-full bg-ps-recessed border border-ps-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent focus:border-ps-accent font-mono"
             />
           </div>
 
           {/* Selector de Color */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-2">
+            <label className="block text-xs font-mono font-semibold text-ps-muted mb-2">
               Color Distintivo
             </label>
             <div className="flex items-center space-x-2">
@@ -252,7 +252,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                   key={c}
                   onClick={() => setColor(c)}
                   className={`w-7 h-7 rounded-full transition-transform ${
-                    color === c ? 'scale-110 ring-2 ring-white ring-offset-2 ring-offset-slate-900' : 'opacity-80'
+                    color === c ? 'scale-110 ring-2 ring-white ring-offset-2 ring-offset-ps-surface' : 'opacity-80'
                   }`}
                   style={{ backgroundColor: c }}
                 />
@@ -260,17 +260,17 @@ export const AccountModal: React.FC<AccountModalProps> = ({
             </div>
           </div>
 
-          <div className="pt-2 flex items-center justify-end space-x-3">
+          <div className="pt-2 flex items-center justify-end space-x-3 font-mono">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white rounded-xl transition-colors"
+              className="px-4 py-2 text-xs font-semibold text-ps-muted hover:text-white rounded-xl transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all shadow-sm"
+              className="px-5 py-2.5 text-xs font-bold text-ps-bg bg-ps-accent hover:bg-white rounded-xl transition-all shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               {accountToEdit ? 'Actualizar' : 'Crear Cuenta'}
             </button>

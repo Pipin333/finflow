@@ -20,8 +20,8 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
   return (
     <>
       {/* Desktop Navigation (Tabs at top under header) */}
-      <nav className="hidden md:block bg-slate-950 border-b border-slate-800/80 px-8">
-        <div className="max-w-7xl mx-auto flex space-x-1 py-2">
+      <nav className="hidden md:block bg-ps-bg border-b border-ps-border px-8">
+        <div className="max-w-7xl mx-auto flex space-x-2 py-2">
           {tabs.map(tab => {
             const Icon = tab.icon
             const isActive = activeTab === tab.id
@@ -29,13 +29,13 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
               <button
                 key={tab.id}
                 onClick={() => onSelectTab(tab.id)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent ${
                   isActive
-                    ? 'bg-slate-800 text-emerald-400 font-semibold'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    ? 'bg-ps-surface text-ps-accent font-bold border border-ps-accent/50 shadow-sm'
+                    : 'text-ps-muted hover:text-white hover:bg-ps-surface/60'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : 'text-slate-500'}`} />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-ps-accent' : 'text-ps-muted'}`} />
                 <span>{tab.label}</span>
               </button>
             )
@@ -44,7 +44,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
       </nav>
 
       {/* Mobile Bottom Navigation Bar (Fixed with safe-area padding) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-lg border-t border-slate-800/80 px-2 pt-2 safe-bottom">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-ps-bg/95 backdrop-blur-lg border-t border-ps-border px-2 pt-2 safe-bottom">
         <div className="flex items-center justify-around">
           {tabs.map(tab => {
             const Icon = tab.icon
@@ -53,11 +53,11 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
               <button
                 key={tab.id}
                 onClick={() => onSelectTab(tab.id)}
-                className={`flex flex-col items-center justify-center py-1.5 px-2 rounded-xl transition-all ${
-                  isActive ? 'text-emerald-400' : 'text-slate-400 hover:text-slate-200'
+                className={`flex flex-col items-center justify-center py-1.5 px-2 rounded-xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent ${
+                  isActive ? 'text-ps-accent font-bold' : 'text-ps-muted hover:text-white'
                 }`}
               >
-                <div className={`p-1 rounded-lg ${isActive ? 'bg-emerald-500/10' : ''}`}>
+                <div className={`p-1 rounded-lg ${isActive ? 'bg-ps-surface border border-ps-border' : ''}`}>
                   <Icon className="w-5 h-5" />
                 </div>
                 <span className="text-[11px] font-medium mt-0.5 tracking-tight">{tab.label.split(' ')[0]}</span>
