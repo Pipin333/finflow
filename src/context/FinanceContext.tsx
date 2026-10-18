@@ -1,8 +1,18 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { Account, Category, Transaction } from '../types'
 import { DEFAULT_ACCOUNTS, DEFAULT_CATEGORIES, generateSeedTransactions } from '../data/seedData'
+import { 
+  saveReceiptImage, 
+  deleteReceiptImage, 
+  exportAllReceipts, 
+  importAllReceipts, 
+  clearAllReceipts 
+} from '../utils/receiptStorage'
 
-interface FinanceContextType {
+/**
+ * Contrato de tipos para el contexto financiero global de FinFlow.
+ */
+export interface FinanceContextType {
   accounts: Account[]
   transactions: Transaction[]
   categories: Category[]
@@ -18,8 +28,8 @@ interface FinanceContextType {
   editAccount: (acc: Account) => void
   deleteAccount: (id: string) => void
   payCreditCard: (fromAccountId: string, creditAccountId: string, amount: number, notes?: string) => void
-  exportToJSON: () => void
-  importFromJSON: (jsonString: string) => boolean
+  exportToJSON: () => Promise<void>
+  importFromJSON: (jsonString: string) => Promise<boolean>
   exportToCSV: () => void
   completeSetup: (initialAccounts: Account[], chosenCurrency: string) => void
   resetToZero: () => void
@@ -34,6 +44,11 @@ const STORAGE_KEY_CATEGORIES = 'finflow_categories_v2'
 const STORAGE_KEY_SETUP = 'finflow_setup_completed_v2'
 const STORAGE_KEY_CURRENCY = 'finflow_currency_v2'
 
+/**
+ * Proveedor principal del estado financiero de FinFlow.
+ * Gestiona cuentas, transacciones, cuotas de tarjetas y persistencia híbrida
+ * (LocalStorage para metadatos + IndexedDB para imágenes de comprobantes).
+ */
 export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const currentMonthStr = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonthStr)
@@ -61,8 +76,8 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       const saved = localStorage.getItem(STORAGE_KEY_ACCOUNTS)
       if (saved) return JSON.parse(saved)
-    } catch (e) {
-      console.error('Error loading accounts:', e)
+    } catch {
+      // Estado seguro por defecto
     }
     return []
   })
@@ -72,8 +87,8 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       const saved = localStorage.getItem(STORAGE_KEY_TRANSACTIONS)
       if (saved) return JSON.parse(saved)
-    } catch (e) {
-      console.error('Error loading transactions:', e)
+    } catch {
+      // Estado seguro por defecto
     }
     return []
   })
@@ -83,50 +98,50 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       const saved = localStorage.getItem(STORAGE_KEY_CATEGORIES)
       if (saved) return JSON.parse(saved)
-    } catch (e) {
-      console.error('Error loading categories:', e)
+    } catch {
+      // Estado seguro por defecto
     }
     return DEFAULT_CATEGORIES
   })
 
-  // Persistir en LocalStorage
+  // Persistir en LocalStorage de forma resiliente
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts))
-    } catch (e) {
-      console.error('Error saving accounts:', e)
+    } catch {
+      // Manejo silencioso sin degradar experiencia
     }
   }, [accounts])
 
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_TRANSACTIONS, JSON.stringify(transactions))
-    } catch (e) {
-      console.error('Error saving transactions:', e)
+    } catch {
+      // Manejo silencioso sin degradar experiencia
     }
   }, [transactions])
 
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_CATEGORIES, JSON.stringify(categories))
-    } catch (e) {
-      console.error('Error saving categories:', e)
+    } catch {
+      // Manejo silencioso sin degradar experiencia
     }
   }, [categories])
 
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_SETUP, String(isSetupCompleted))
-    } catch (e) {
-      console.error('Error saving setup status:', e)
+    } catch {
+      // Manejo silencioso sin degradar experiencia
     }
   }, [isSetupCompleted])
 
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_CURRENCY, currency)
-    } catch (e) {
-      console.error('Error saving currency:', e)
+    } catch {
+      // Manejo silencioso sin degradar experiencia
     }
   }, [currency])
 
@@ -138,18 +153,44 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }
 
   const addTransaction = (tx: Omit<Transaction, 'id'>) => {
+    const newId = 'tx-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4)
+    let receiptRef = tx.receiptImage
+
+    // Si viene una imagen base64 nueva, guardarla en IndexedDB para no saturar LocalStorage
+    if (tx.receiptImage && tx.receiptImage.startsWith('data:image/')) {
+      receiptRef = `rcpt-${newId}`
+      saveReceiptImage(receiptRef, tx.receiptImage)
+    }
+
     const newTx: Transaction = {
       ...tx,
-      id: 'tx-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4),
+      id: newId,
+      receiptImage: receiptRef,
     }
     setTransactions(prev => [newTx, ...prev])
   }
 
   const editTransaction = (updatedTx: Transaction) => {
-    setTransactions(prev => prev.map(t => (t.id === updatedTx.id ? updatedTx : t)))
+    let receiptRef = updatedTx.receiptImage
+
+    // Si se subió una nueva imagen en base64
+    if (updatedTx.receiptImage && updatedTx.receiptImage.startsWith('data:image/')) {
+      receiptRef = `rcpt-${updatedTx.id}`
+      saveReceiptImage(receiptRef, updatedTx.receiptImage)
+    } else if (!updatedTx.receiptImage) {
+      // Si el usuario eliminó la foto adjunta
+      deleteReceiptImage(`rcpt-${updatedTx.id}`)
+    }
+
+    const sanitizedTx: Transaction = {
+      ...updatedTx,
+      receiptImage: receiptRef,
+    }
+    setTransactions(prev => prev.map(t => (t.id === sanitizedTx.id ? sanitizedTx : t)))
   }
 
   const deleteTransaction = (id: string) => {
+    deleteReceiptImage(`rcpt-${id}`)
     setTransactions(prev => prev.filter(t => t.id !== id))
   }
 
@@ -188,7 +229,8 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setTransactions(prev => [paymentTx, ...prev])
   }
 
-  const exportToJSON = () => {
+  const exportToJSON = async () => {
+    const receipts = await exportAllReceipts()
     const backupData = {
       version: 2,
       exportDate: new Date().toISOString(),
@@ -196,6 +238,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
       accounts,
       transactions,
       categories,
+      receipts,
     }
     const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
@@ -206,7 +249,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     URL.revokeObjectURL(url)
   }
 
-  const importFromJSON = (jsonString: string): boolean => {
+  const importFromJSON = async (jsonString: string): Promise<boolean> => {
     try {
       const parsed = JSON.parse(jsonString)
       if (Array.isArray(parsed.accounts) && Array.isArray(parsed.transactions)) {
@@ -216,12 +259,14 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (Array.isArray(parsed.categories)) {
           setCategories(parsed.categories)
         }
+        if (parsed.receipts && typeof parsed.receipts === 'object') {
+          await importAllReceipts(parsed.receipts)
+        }
         setIsSetupCompleted(true)
         return true
       }
       return false
-    } catch (e) {
-      console.error('Error importing backup:', e)
+    } catch {
       return false
     }
   }
@@ -256,6 +301,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }
 
   const resetToZero = () => {
+    clearAllReceipts()
     setAccounts([])
     setTransactions([])
     setCategories(DEFAULT_CATEGORIES)

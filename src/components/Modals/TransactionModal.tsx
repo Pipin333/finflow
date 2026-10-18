@@ -15,6 +15,7 @@ import { useFinance } from '../../context/FinanceContext'
 import { Transaction, TransactionType } from '../../types'
 import { isCreditAccount, formatCurrency } from '../../utils/financeCalculators'
 import { compressReceiptImage } from '../../utils/imageCompressor'
+import { getReceiptImage } from '../../utils/receiptStorage'
 
 interface TransactionModalProps {
   isOpen: boolean
@@ -65,7 +66,13 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
       setNotes(transactionToEdit.notes || '')
       setInstallmentsCount(transactionToEdit.installmentsCount || 1)
       setIsInterestFree(transactionToEdit.isInterestFree ?? true)
-      setReceiptImage(transactionToEdit.receiptImage || null)
+      if (transactionToEdit.receiptImage) {
+        getReceiptImage(transactionToEdit.receiptImage).then(img => {
+          setReceiptImage(img || null)
+        })
+      } else {
+        setReceiptImage(null)
+      }
     } else {
       setType(initialType)
       setAmount('')

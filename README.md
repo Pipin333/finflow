@@ -86,6 +86,32 @@ Sigue las instrucciones de la consola:
 
 ---
 
+## 🐳 Ejecución con Docker (1-Click Run)
+
+FinFlow está 100% containerizado y preparado para ejecutarse de forma universal en cualquier máquina (Linux, macOS Apple Silicon o Intel, Windows con WSL2 o Docker Desktop) mediante un único comando, sin requerir la instalación de Node.js en el sistema:
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/Pipin333/finflow.git
+cd finflow
+
+# 2. Copiar variables de entorno
+cp .env.example .env
+
+# 3. Construir y levantar el contenedor
+docker compose up --build
+```
+
+Una vez iniciado, abre tu navegador en:
+👉 **`http://localhost:3000`**
+
+Para detener el contenedor:
+```bash
+docker compose down
+```
+
+---
+
 ## 🛠️ Tecnologías Utilizadas
 
 - **Framework**: React 19 + TypeScript + Vite.

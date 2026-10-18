@@ -17,6 +17,7 @@ import {
 import { useFinance } from '../../context/FinanceContext'
 import { Transaction, TransactionType } from '../../types'
 import { formatCurrency } from '../../utils/financeCalculators'
+import { getReceiptImage } from '../../utils/receiptStorage'
 
 interface TransactionsViewProps {
   onOpenNewTransaction: () => void
@@ -38,6 +39,13 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
 
   // Visor Lightbox de boleta
   const [viewingReceiptImage, setViewingReceiptImage] = useState<string | null>(null)
+
+  const handleOpenReceipt = async (receiptRef: string) => {
+    const dataUrl = await getReceiptImage(receiptRef)
+    if (dataUrl) {
+      setViewingReceiptImage(dataUrl)
+    }
+  }
 
   // Filtrado de transacciones
   const filteredTransactions = useMemo(() => {
@@ -322,7 +330,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                       {/* Botón rápido ver boleta si existe */}
                       {tx.receiptImage && (
                         <button
-                          onClick={() => setViewingReceiptImage(tx.receiptImage!)}
+                          onClick={() => handleOpenReceipt(tx.receiptImage!)}
                           className="p-1.5 text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg transition-colors"
                           title="Ver boleta adjunta"
                         >

@@ -22,9 +22,9 @@ export const SettingsView: React.FC = () => {
     if (!file) return
 
     const reader = new FileReader()
-    reader.onload = event => {
+    reader.onload = async event => {
       const content = event.target?.result as string
-      const success = importFromJSON(content)
+      const success = await importFromJSON(content)
       if (success) {
         setImportStatus('¡Datos restaurados con éxito!')
         setTimeout(() => setImportStatus(null), 4000)

@@ -50,4 +50,23 @@ describe('backup & export logic', () => {
     expect(Array.isArray(parsed.transactions)).toBe(true)
     expect(parsed.accounts[0].name).toBe('Banco')
   })
+
+  it('soporta e incluye el diccionario de boletas en el payload de respaldo', () => {
+    const backupWithReceipts = {
+      version: 2,
+      exportDate: new Date().toISOString(),
+      currency: '$',
+      accounts: [],
+      transactions: [{ id: 'tx-1', date: '2026-10-01', type: 'expense', amount: 1000, accountId: 'acc-1', category: 'General', description: 'Test', receiptImage: 'rcpt-tx-1' }],
+      receipts: {
+        'rcpt-tx-1': 'data:image/jpeg;base64,sample-receipt-data',
+      },
+    }
+
+    const json = JSON.stringify(backupWithReceipts)
+    const parsed = JSON.parse(json)
+
+    expect(parsed.receipts).toBeDefined()
+    expect(parsed.receipts['rcpt-tx-1']).toBe('data:image/jpeg;base64,sample-receipt-data')
+  })
 })
