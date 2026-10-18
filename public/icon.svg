@@ -1,20 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f172a" />
-      <stop offset="100%" stop-color="#020617" />
+    <linearGradient id="psBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#012456" />
+      <stop offset="100%" stop-color="#061d47" />
     </linearGradient>
-    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#10b981" />
-      <stop offset="100%" stop-color="#059669" />
+    <linearGradient id="chipGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="100%" stop-color="#eab308" />
     </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="128" fill="url(#bg)"/>
-  <rect x="32" y="32" width="448" height="448" rx="100" fill="none" stroke="#334155" stroke-width="6"/>
-  <!-- Graphic: wallet & pulse flow -->
-  <path d="M128 176 C128 152 148 132 172 132 L340 132 C364 132 384 152 384 176 L384 336 C384 360 364 380 340 380 L172 380 C148 380 128 360 128 336 Z" fill="#1e293b" stroke="#475569" stroke-width="12" />
-  <path d="M128 210 L384 210" stroke="#334155" stroke-width="8" />
-  <circle cx="340" cy="275" r="24" fill="url(#accent)"/>
-  <path d="M180 310 L230 260 L270 290 L330 230" fill="none" stroke="#10b981" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
-  <circle cx="330" cy="230" r="8" fill="#34d399"/>
+
+  <!-- Squircle Base -->
+  <rect width="512" height="512" rx="120" fill="url(#psBg)" />
+  <rect x="16" y="16" width="480" height="480" rx="104" fill="none" stroke="#1d4ed8" stroke-width="16" opacity="0.9" />
+
+  <!-- ATM Card Frame -->
+  <rect x="72" y="112" width="368" height="288" rx="44" fill="#0a2d6c" stroke="#00d4ff" stroke-width="22" />
+
+  <!-- Card Stripe -->
+  <rect x="72" y="180" width="368" height="48" fill="#012456" />
+
+  <!-- Security Chip -->
+  <rect x="120" y="264" width="84" height="70" rx="14" fill="url(#chipGold)" />
+  <line x1="162" y1="264" x2="162" y2="334" stroke="#061d47" stroke-width="5" />
+  <line x1="120" y1="299" x2="204" y2="299" stroke="#061d47" stroke-width="5" />
+
+  <!-- Terminal Prompt (>_) -->
+  <path d="M246 270 L286 299 L246 328" fill="none" stroke="#00d4ff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" />
+  <line x1="310" y1="328" x2="360" y2="328" stroke="#ffffff" stroke-width="22" stroke-linecap="round" />
 </svg>

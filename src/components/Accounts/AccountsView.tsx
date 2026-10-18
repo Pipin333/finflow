@@ -170,13 +170,13 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
 
                       <div>
                         <div className="flex items-center space-x-1 text-ps-muted text-[11px] font-mono">
-                          <Calendar className="w-3.5 h-3.5 text-ps-danger" />
+                          <Calendar className="w-3.5 h-3.5 text-ps-warning" />
                           <span>Vencimiento de Pago</span>
                         </div>
                         <div className="text-sm font-semibold font-mono text-white mt-1">
                           {stmt.dueDateStr}
                         </div>
-                        <div className="text-[10px] font-mono text-ps-danger font-medium">
+                        <div className="text-[10px] font-mono text-ps-warning font-medium">
                           {stmt.daysUntilDue === 0 ? 'Vence hoy' : `Faltan ${stmt.daysUntilDue} dias`}
                         </div>
                       </div>
@@ -202,7 +202,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                     <div className="p-3 bg-ps-recessed border border-ps-border rounded-xl flex items-center justify-between">
                       <div>
                         <span className="text-[10px] uppercase font-mono font-bold text-ps-muted block">Total a pagar este resumen</span>
-                        <span className="text-lg font-bold font-mono text-ps-danger tabular-nums">
+                        <span className="text-lg font-bold font-mono text-ps-warning tabular-nums">
                           {fmt(stmt.statementTotalToPay)}
                         </span>
                       </div>

@@ -1,11 +1,11 @@
 {
-  "name": "FinFlow - Control de Gastos y Finanzas",
+  "name": "FinFlow: Terminal Financiero",
   "short_name": "FinFlow",
-  "description": "Monitoreo integral de gastos, ingresos, cuentas bancarias y tarjetas de crédito con cuotas",
+  "description": "Monitoreo integral de gastos, ingresos, cuentas bancarias y tarjetas de credito con cuotas",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#090d16",
-  "theme_color": "#090d16",
+  "background_color": "#012456",
+  "theme_color": "#012456",
   "orientation": "portrait-primary",
   "icons": [
     {

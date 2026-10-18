@@ -152,7 +152,7 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
             <div className="bg-ps-recessed p-3.5 rounded-xl border border-ps-border/70 text-xs font-mono space-y-2">
               <div className="flex justify-between text-ps-muted">
                 <span>Resumen proximo a pagar:</span>
-                <strong className="text-ps-danger tabular-nums">
+                <strong className="text-ps-warning tabular-nums">
                   {formatCurrency(cardSummary.statementTotalToPay)}
                 </strong>
               </div>

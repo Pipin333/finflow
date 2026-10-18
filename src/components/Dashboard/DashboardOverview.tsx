@@ -90,7 +90,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
             <div className="flex items-center justify-between text-xs">
               <span className="text-ps-muted font-mono uppercase">Deuda Tarjetas / Credito:</span>
-              <span className="font-mono font-bold text-ps-danger text-sm tabular-nums">
+              <span className="font-mono font-bold text-ps-warning text-sm tabular-nums">
                 {fmt(totalDebt)}
               </span>
             </div>
@@ -211,7 +211,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
                     <div className="text-right">
                       <span className="text-[11px] text-ps-muted block uppercase font-mono font-medium">A pagar este resumen</span>
-                      <span className="text-lg font-bold font-mono text-ps-danger tabular-nums">
+                      <span className="text-lg font-bold font-mono text-ps-warning tabular-nums">
                         {fmt(stmt.statementTotalToPay)}
                       </span>
                     </div>
@@ -230,7 +230,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <Calendar className="w-4 h-4 text-ps-danger flex-shrink-0" />
+                      <Calendar className="w-4 h-4 text-ps-warning flex-shrink-0" />
                       <div>
                         <div className="text-ps-muted text-[10px] font-mono">Fecha de Vencimiento</div>
                         <div className="font-mono font-medium text-white">
