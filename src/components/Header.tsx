@@ -35,15 +35,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenNewTransaction, onOpenPayC
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
         {/* Left: Brand Identity */}
         <div className="flex items-center space-x-2.5 flex-shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-ps-surface border border-ps-border flex items-center justify-center text-ps-accent">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="5" width="20" height="14" rx="2"/>
-              <line x1="2" y1="10" x2="22" y2="10"/>
-            </svg>
+          <div className="w-8 h-8 rounded-lg overflow-hidden border border-ps-border flex-shrink-0 shadow-sm bg-ps-recessed">
+            <img src="/icon.svg" alt="FinFlow Terminal" className="w-full h-full object-contain" />
           </div>
           <div className="flex items-center space-x-1.5">
             <span className="font-bold text-base md:text-lg tracking-tight text-white font-mono">FinFlow</span>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ps-surface text-ps-accent border border-ps-border">v2.0</span>
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ps-recessed text-ps-accent border border-ps-accent/40 font-bold">ATM</span>
           </div>
         </div>
 
