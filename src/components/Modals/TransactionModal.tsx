@@ -261,8 +261,10 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
               <label htmlFor="tx-amount" className="block text-xs font-mono font-semibold text-ps-muted uppercase tracking-wider mb-1">
                 Monto ({currency})
               </label>
-              <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ps-muted font-bold text-lg font-mono">{currency}</span>
+              <div className="flex rounded-xl overflow-hidden border border-ps-border bg-ps-recessed focus-within:ring-2 focus-within:ring-ps-accent focus-within:border-ps-accent transition-all">
+                <span className="inline-flex items-center px-3.5 bg-ps-surface border-r border-ps-border text-ps-muted font-bold text-sm font-mono select-none">
+                  {currency}
+                </span>
                 <input
                   id="tx-amount"
                   type="number"
@@ -274,8 +276,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                     setAmount(e.target.value)
                     if (validationError) setValidationError(null)
                   }}
-                  className="w-full bg-ps-recessed border border-ps-border rounded-xl pl-10 pr-4 py-3 text-xl font-bold font-mono text-white tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent focus:border-ps-accent transition-colors"
-                  autoFocus
+                  className="w-full bg-transparent px-4 py-3 text-xl font-bold font-mono text-white tabular-nums focus:outline-none"
                 />
               </div>
             </div>

@@ -20,7 +20,7 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
   onClose,
   initialCardId,
 }) => {
-  const { accounts, transactions, payCreditCard } = useFinance()
+  const { accounts, transactions, payCreditCard, currency } = useFinance()
 
   const creditCards = accounts.filter(a => isCreditAccount(a.type))
   const liquidAccounts = accounts.filter(a => !isCreditAccount(a.type))
@@ -215,10 +215,12 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
           {/* Monto a transferir/pagar */}
           <div>
             <label htmlFor="pay-amount-input" className="block text-xs font-mono font-semibold text-ps-muted uppercase tracking-wider mb-1">
-              Monto del Pago ($)
+              Monto del Pago ({currency})
             </label>
-            <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ps-muted font-bold text-lg font-mono">$</span>
+            <div className="flex rounded-xl overflow-hidden border border-ps-border bg-ps-recessed focus-within:ring-2 focus-within:ring-ps-accent focus-within:border-ps-accent transition-all">
+              <span className="inline-flex items-center px-3.5 bg-ps-surface border-r border-ps-border text-ps-muted font-bold text-sm font-mono select-none">
+                {currency}
+              </span>
               <input
                 id="pay-amount-input"
                 type="number"
@@ -230,7 +232,7 @@ export const PayCreditModal: React.FC<PayCreditModalProps> = ({
                   setAmount(e.target.value)
                   if (validationError) setValidationError(null)
                 }}
-                className="w-full bg-ps-recessed border border-ps-border rounded-xl pl-9 pr-4 py-3 text-xl font-bold font-mono text-white tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-accent focus:border-ps-accent transition-colors"
+                className="w-full bg-transparent px-4 py-3 text-xl font-bold font-mono text-white tabular-nums focus:outline-none"
               />
             </div>
           </div>
