@@ -133,11 +133,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <div className="bg-ps-surface border border-ps-border rounded-xl p-5 shadow-sm">
           <div className="flex items-center justify-between text-ps-muted mb-2">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider">Gastos del Mes</span>
-            <span className="p-1 rounded-lg bg-ps-recessed border border-ps-border text-ps-danger">
+            <span className="p-1 rounded-lg bg-ps-recessed border border-ps-border text-ps-warning">
               <TrendingDown className="w-4 h-4" />
             </span>
           </div>
-          <div className="text-2xl sm:text-fluid-stat font-bold font-mono tracking-tight text-ps-danger tabular-nums">
+          <div className="text-2xl sm:text-fluid-stat font-bold font-mono tracking-tight text-ps-warning tabular-nums">
             {fmt(monthlyMetrics.totalExpense)}
           </div>
           <div className="mt-2 text-xs text-ps-muted">
@@ -152,13 +152,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <span className={`text-xs font-mono font-semibold px-2 py-0.5 rounded-full border ${
               monthlyMetrics.netSavings >= 0 
                 ? 'bg-ps-recessed text-ps-accent border-ps-accent/40' 
-                : 'bg-ps-recessed text-ps-danger border-ps-danger/40'
+                : 'bg-ps-recessed text-ps-warning border-ps-warning/40'
             }`}>
               {monthlyMetrics.savingsRate}% ahorro
             </span>
           </div>
           <div className={`text-2xl sm:text-fluid-stat font-bold font-mono tracking-tight tabular-nums ${
-            monthlyMetrics.netSavings >= 0 ? 'text-ps-accent' : 'text-ps-danger'
+            monthlyMetrics.netSavings >= 0 ? 'text-ps-accent' : 'text-ps-warning'
           }`}>
             {fmt(monthlyMetrics.netSavings)}
           </div>
@@ -369,7 +369,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             isIncome
                               ? 'bg-ps-recessed text-ps-accent border-ps-accent/40'
                               : isExpense
-                              ? 'bg-ps-recessed text-ps-danger border-ps-danger/40'
+                              ? 'bg-ps-recessed text-ps-warning border-ps-warning/40'
                               : 'bg-ps-recessed text-white border-ps-border'
                           }`}
                         >

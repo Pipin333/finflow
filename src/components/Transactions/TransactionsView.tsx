@@ -212,7 +212,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
             <div className="flex items-center space-x-4 text-ps-muted">
               <span>Resultados: <strong className="text-white">{filteredTransactions.length}</strong></span>
               <span>Ingresos: <strong className="text-ps-accent tabular-nums">{fmt(totals.income)}</strong></span>
-              <span>Gastos: <strong className="text-ps-danger tabular-nums">{fmt(totals.expense)}</strong></span>
+              <span>Gastos: <strong className="text-ps-warning tabular-nums">{fmt(totals.expense)}</strong></span>
             </div>
           </div>
         </div>
@@ -243,7 +243,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                           isIncome
                             ? 'bg-ps-recessed text-ps-accent border-ps-accent/40'
                             : isExpense
-                            ? 'bg-ps-recessed text-ps-danger border-ps-danger/40'
+                            ? 'bg-ps-recessed text-ps-warning border-ps-warning/40'
                             : 'bg-ps-recessed text-white border-ps-border'
                         }`}
                       >

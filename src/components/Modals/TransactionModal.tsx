@@ -203,9 +203,9 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   const first = categories.find(c => c.type === 'expense')
                   if (first) setCategory(first.name)
                 }}
-                className={`flex items-center justify-center space-x-2 py-2 rounded-xl text-xs font-mono font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-danger transition-all ${
+                className={`flex items-center justify-center space-x-2 py-2 rounded-xl text-xs font-mono font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-ps-warning transition-all ${
                   type === 'expense'
-                    ? 'bg-ps-surface text-ps-danger border border-ps-danger/60'
+                    ? 'bg-ps-surface text-ps-warning border border-ps-warning/60'
                     : 'text-ps-muted hover:text-white'
                 }`}
               >

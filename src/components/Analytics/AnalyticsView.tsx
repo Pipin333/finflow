@@ -25,7 +25,7 @@ export const AnalyticsView: React.FC = () => {
     })
 
     const categories = Array.from(map.entries()).map(([name, amount], index) => {
-      const colors = ['#f97316', '#3b82f6', '#10b981', '#8b5cf6', '#ec4899', '#06b6d4', '#eab308', '#64748b']
+      const colors = ['#facc15', '#38bdf8', '#34d399', '#a78bfa', '#fb923c', '#93c5fd', '#f472b6', '#94a3b8']
       return {
         name,
         amount,
@@ -153,7 +153,7 @@ export const AnalyticsView: React.FC = () => {
 
           <div className="pt-4 mt-4 border-t border-ps-border/70 flex items-center justify-between text-xs text-ps-muted font-mono">
             <span>Total Gastos del Periodo:</span>
-            <strong className="text-ps-danger font-bold text-sm tabular-nums">
+            <strong className="text-ps-warning font-bold text-sm tabular-nums">
               {fmt(categoryBreakdown.totalExpenses)}
             </strong>
           </div>
@@ -173,7 +173,7 @@ export const AnalyticsView: React.FC = () => {
                   <span className="text-ps-muted">Ingresos</span>
                 </span>
                 <span className="flex items-center space-x-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-ps-danger inline-block"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-ps-warning inline-block"></span>
                   <span className="text-ps-muted">Gastos</span>
                 </span>
               </div>
@@ -197,7 +197,7 @@ export const AnalyticsView: React.FC = () => {
 
                       {/* Barra Gasto */}
                       <div
-                        className="w-3.5 sm:w-4 bg-ps-danger rounded-t transition-all group-hover:brightness-125"
+                        className="w-3.5 sm:w-4 bg-ps-warning rounded-t transition-all group-hover:brightness-125"
                         style={{ height: `${Math.max(4, expenseHeight)}%` }}
                         title={`${m.monthLabel}: Gastos ${fmt(m.expense)}`}
                       ></div>
@@ -234,7 +234,7 @@ export const AnalyticsView: React.FC = () => {
                     <span className="text-ps-muted ml-2">({exp.category})</span>
                   </div>
                 </div>
-                <div className="font-bold text-ps-danger tabular-nums">
+                <div className="font-bold text-ps-warning tabular-nums">
                   {fmt(exp.amount)}
                 </div>
               </div>
