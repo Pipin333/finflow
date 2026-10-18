@@ -38,10 +38,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenNewTransaction, onOpenPayC
           <div className="w-8 h-8 rounded-lg overflow-hidden border border-ps-border flex-shrink-0 shadow-sm bg-ps-recessed">
             <img src="/icon.svg" alt="FinFlow Terminal" className="w-full h-full object-contain" />
           </div>
-          <div className="flex items-center space-x-1.5">
-            <span className="font-bold text-base md:text-lg tracking-tight text-white font-mono">FinFlow</span>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ps-recessed text-ps-accent border border-ps-accent/40 font-bold">ATM</span>
-          </div>
+          <span className="font-bold text-base md:text-lg tracking-tight text-white font-mono">FinFlow</span>
         </div>
 
         {/* Center: Month Navigator (Compact on mobile, expanded on desktop) */}
