@@ -163,12 +163,17 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
     }
 
     try {
-      confetti({
-        particleCount: 80,
-        spread: 80,
-        origin: { y: 0.5 },
-      })
-    } catch (e) {}
+      const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!prefersReducedMotion) {
+        confetti({
+          particleCount: 80,
+          spread: 80,
+          origin: { y: 0.5 },
+        })
+      }
+    } catch {
+      // Ignorar si no está disponible
+    }
 
     onComplete(formattedAccounts, finalCurrency)
   }
@@ -185,7 +190,12 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
   ]
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+    <div 
+      role="dialog" 
+      aria-modal="true" 
+      aria-labelledby="setup-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto"
+    >
       <div className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl my-6 flex flex-col">
         {/* Cabecera del Setup */}
         <div className="p-6 bg-slate-950 border-b border-slate-800/80">
@@ -195,7 +205,7 @@ export const InitialSetupModal: React.FC<InitialSetupModalProps> = ({
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-white tracking-tight">Bienvenido a FinFlow</h1>
+                <h1 id="setup-modal-title" className="text-lg font-bold text-white tracking-tight">Bienvenido a FinFlow</h1>
                 <p className="text-xs text-slate-400">Asistente de configuración inicial</p>
               </div>
             </div>

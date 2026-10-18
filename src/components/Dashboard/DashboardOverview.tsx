@@ -57,7 +57,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <span className="text-xs font-semibold uppercase tracking-wider">Patrimonio Neto</span>
             <Wallet className="w-4 h-4 text-emerald-400" />
           </div>
-          <div className="text-2xl font-bold tracking-tight text-white tabular-nums">
+          <div className="text-2xl sm:text-fluid-stat font-bold tracking-tight text-white tabular-nums">
             {fmt(netWorth)}
           </div>
           <div className="mt-2 text-xs text-slate-400 flex items-center justify-between">
@@ -74,7 +74,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <TrendingUp className="w-4 h-4" />
             </span>
           </div>
-          <div className="text-2xl font-bold tracking-tight text-emerald-400 tabular-nums">
+          <div className="text-2xl sm:text-fluid-stat font-bold tracking-tight text-emerald-400 tabular-nums">
             {fmt(monthlyMetrics.totalIncome)}
           </div>
           <div className="mt-2 text-xs text-slate-400">
@@ -90,7 +90,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <TrendingDown className="w-4 h-4" />
             </span>
           </div>
-          <div className="text-2xl font-bold tracking-tight text-rose-400 tabular-nums">
+          <div className="text-2xl sm:text-fluid-stat font-bold tracking-tight text-rose-400 tabular-nums">
             {fmt(monthlyMetrics.totalExpense)}
           </div>
           <div className="mt-2 text-xs text-slate-400">
@@ -110,7 +110,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               {monthlyMetrics.savingsRate}% ahorro
             </span>
           </div>
-          <div className={`text-2xl font-bold tracking-tight tabular-nums ${
+          <div className={`text-2xl sm:text-fluid-stat font-bold tracking-tight tabular-nums ${
             monthlyMetrics.netSavings >= 0 ? 'text-emerald-400' : 'text-rose-400'
           }`}>
             {fmt(monthlyMetrics.netSavings)}

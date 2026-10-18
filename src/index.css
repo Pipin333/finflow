@@ -40,4 +40,24 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #334155;
   }
+
+  /* Fluid typography scaling with clamp */
+  .text-fluid-hero {
+    font-size: clamp(1.75rem, 1.25rem + 2.5vw, 2.75rem);
+    line-height: 1.15;
+  }
+  .text-fluid-stat {
+    font-size: clamp(1.25rem, 1rem + 1.2vw, 1.875rem);
+    line-height: 1.2;
+  }
+}
+
+/* Accessibility: Respect vestibular sensitivity and user reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

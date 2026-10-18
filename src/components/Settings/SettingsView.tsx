@@ -15,7 +15,12 @@ import { useFinance } from '../../context/FinanceContext'
 export const SettingsView: React.FC = () => {
   const { exportToJSON, importFromJSON, exportToCSV, resetToZero, loadDemoData } = useFinance()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [importStatus, setImportStatus] = useState<string | null>(null)
+  const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  const showNotification = (type: 'success' | 'error', text: string) => {
+    setStatusMessage({ type, text })
+    setTimeout(() => setStatusMessage(null), 4500)
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -26,10 +31,9 @@ export const SettingsView: React.FC = () => {
       const content = event.target?.result as string
       const success = await importFromJSON(content)
       if (success) {
-        setImportStatus('¡Datos restaurados con éxito!')
-        setTimeout(() => setImportStatus(null), 4000)
+        showNotification('success', '¡Datos restaurados con éxito desde el archivo de respaldo!')
       } else {
-        alert('El archivo seleccionado no tiene un formato válido de respaldo de FinFlow.')
+        showNotification('error', 'El archivo seleccionado no tiene un formato válido de respaldo de FinFlow.')
       }
     }
     reader.readAsText(file)
@@ -44,13 +48,14 @@ export const SettingsView: React.FC = () => {
   const handleLoadDemo = () => {
     if (confirm('¿Deseas cargar las cuentas y movimientos de ejemplo? Esto te permitirá visualizar todas las funciones con datos de prueba.')) {
       loadDemoData()
-      alert('Datos de prueba cargados con éxito.')
+      showNotification('success', 'Datos de prueba cargados con éxito.')
     }
   }
 
   const handleClearAll = () => {
     if (confirm('¿Estás seguro de dejar la app completamente en cero (0 cuentas, 0 movimientos)?')) {
       resetToZero()
+      showNotification('success', 'La aplicación se ha reiniciado a cero.')
     }
   }
 
@@ -73,10 +78,17 @@ export const SettingsView: React.FC = () => {
           Tus datos residen exclusivamente en el almacenamiento de tu navegador (<code className="text-emerald-400">LocalStorage</code>).
         </p>
 
-        {importStatus && (
-          <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400 text-xs font-semibold flex items-center space-x-2">
-            <CheckCircle2 className="w-4 h-4" />
-            <span>{importStatus}</span>
+        {statusMessage && (
+          <div 
+            role="status"
+            className={`p-3 rounded-xl text-xs font-semibold flex items-center space-x-2 border ${
+              statusMessage.type === 'success'
+                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                : 'bg-rose-500/15 border-rose-500/30 text-rose-300'
+            }`}
+          >
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+            <span>{statusMessage.text}</span>
           </div>
         )}
 

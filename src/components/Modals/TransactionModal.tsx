@@ -50,11 +50,13 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   const [receiptImage, setReceiptImage] = useState<string | null>(null)
   const [isCompressing, setIsCompressing] = useState<boolean>(false)
   const [previewEnlarged, setPreviewEnlarged] = useState<boolean>(false)
+  const [validationError, setValidationError] = useState<string | null>(null)
 
   const cameraInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
+    setValidationError(null)
     if (transactionToEdit) {
       setType(transactionToEdit.type)
       setAmount(String(transactionToEdit.amount))
@@ -108,10 +110,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
     try {
       setIsCompressing(true)
+      setValidationError(null)
       const compressedDataUrl = await compressReceiptImage(file)
       setReceiptImage(compressedDataUrl)
     } catch (err) {
-      alert('Error al procesar la foto de la boleta: ' + (err as Error).message)
+      setValidationError('Error al procesar la foto de la boleta: ' + (err as Error).message)
     } finally {
       setIsCompressing(false)
       e.target.value = ''
@@ -121,21 +124,23 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!amount || parsedAmount <= 0) {
-      alert('Por favor ingresa un monto válido.')
+      setValidationError('Por favor ingresa un monto válido mayor a cero.')
       return
     }
     if (!description.trim()) {
-      alert('Por favor ingresa un concepto o descripción.')
+      setValidationError('Por favor ingresa un concepto o descripción.')
       return
     }
     if (!accountId) {
-      alert('Por favor selecciona una cuenta.')
+      setValidationError('Por favor selecciona una cuenta.')
       return
     }
     if (type === 'transfer' && (!toAccountId || toAccountId === accountId)) {
-      alert('Selecciona una cuenta de destino diferente a la de origen.')
+      setValidationError('Selecciona una cuenta de destino diferente a la de origen.')
       return
     }
+
+    setValidationError(null)
 
     const txData: Omit<Transaction, 'id'> = {
       type,
@@ -166,16 +171,22 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto">
+      <div 
+        role="dialog" 
+        aria-modal="true" 
+        aria-labelledby="tx-modal-title"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto"
+      >
         <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl my-8">
           {/* Cabecera del Modal */}
           <div className="flex items-center justify-between p-5 border-b border-slate-800">
-            <h2 className="text-base font-bold text-white">
+            <h2 id="tx-modal-title" className="text-base font-bold text-white">
               {transactionToEdit ? 'Editar Movimiento' : 'Nuevo Movimiento'}
             </h2>
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors"
+              aria-label="Cerrar ventana de movimiento"
+              className="p-1.5 text-slate-400 hover:text-white rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -188,10 +199,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                 type="button"
                 onClick={() => {
                   setType('expense')
+                  if (validationError) setValidationError(null)
                   const first = categories.find(c => c.type === 'expense')
                   if (first) setCategory(first.name)
                 }}
-                className={`flex items-center justify-center space-x-2 py-2 rounded-xl text-xs font-semibold transition-all ${
+                className={`flex items-center justify-center space-x-2 py-2 rounded-xl text-xs font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 transition-all ${
                   type === 'expense'
                     ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
                     : 'text-slate-400 hover:text-slate-200'
@@ -205,10 +217,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                 type="button"
                 onClick={() => {
                   setType('income')
+                  if (validationError) setValidationError(null)
                   const first = categories.find(c => c.type === 'income')
                   if (first) setCategory(first.name)
                 }}
-                className={`flex items-center justify-center space-x-2 py-2 rounded-xl text-xs font-semibold transition-all ${
+                className={`flex items-center justify-center space-x-2 py-2 rounded-xl text-xs font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 transition-all ${
                   type === 'income'
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
                     : 'text-slate-400 hover:text-slate-200'
@@ -220,8 +233,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
               <button
                 type="button"
-                onClick={() => setType('transfer')}
-                className={`flex items-center justify-center space-x-2 py-2 rounded-xl text-xs font-semibold transition-all ${
+                onClick={() => {
+                  setType('transfer')
+                  if (validationError) setValidationError(null)
+                }}
+                className={`flex items-center justify-center space-x-2 py-2 rounded-xl text-xs font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-all ${
                   type === 'transfer'
                     ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
                     : 'text-slate-400 hover:text-slate-200'
@@ -234,21 +250,31 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
           )}
 
           <form onSubmit={handleSubmit} className="p-5 space-y-4 max-h-[75vh] overflow-y-auto">
+            {validationError && (
+              <div role="alert" className="p-3 bg-rose-500/15 border border-rose-500/30 rounded-xl text-xs text-rose-300 font-medium">
+                {validationError}
+              </div>
+            )}
+
             {/* Campo de Monto */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+              <label htmlFor="tx-amount" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
                 Monto ({currency})
               </label>
               <div className="relative">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-lg">{currency}</span>
                 <input
+                  id="tx-amount"
                   type="number"
                   step="any"
                   required
                   placeholder="0.00"
                   value={amount}
-                  onChange={e => setAmount(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-xl font-bold text-white tabular-nums focus:outline-none focus:border-emerald-500 transition-colors"
+                  onChange={e => {
+                    setAmount(e.target.value)
+                    if (validationError) setValidationError(null)
+                  }}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-xl font-bold text-white tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-emerald-500 transition-colors"
                   autoFocus
                 />
               </div>
@@ -256,42 +282,51 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
             {/* Concepto / Descripción */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label htmlFor="tx-description" className="block text-xs font-semibold text-slate-300 mb-1">
                 Concepto / Descripción
               </label>
               <input
+                id="tx-description"
                 type="text"
                 required
                 placeholder="Ej: Supermercado, Almuerzo, Monitor, etc..."
                 value={description}
-                onChange={e => setDescription(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
+                onChange={e => {
+                  setDescription(e.target.value)
+                  if (validationError) setValidationError(null)
+                }}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-emerald-500 transition-colors"
               />
             </div>
 
             {/* Fecha y Cuenta Origen */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label htmlFor="tx-date" className="block text-xs font-semibold text-slate-300 mb-1">
                   Fecha
                 </label>
                 <input
+                  id="tx-date"
                   type="date"
                   required
                   value={date}
                   onChange={e => setDate(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-emerald-500 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label htmlFor="tx-account" className="block text-xs font-semibold text-slate-300 mb-1">
                   {type === 'income' ? 'Cuenta de Depósito' : 'Cuenta de Origen'}
                 </label>
                 <select
+                  id="tx-account"
                   value={accountId}
-                  onChange={e => setAccountId(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
+                  onChange={e => {
+                    setAccountId(e.target.value)
+                    if (validationError) setValidationError(null)
+                  }}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-emerald-500"
                 >
                   {accounts.map(acc => (
                     <option key={acc.id} value={acc.id}>
@@ -305,13 +340,17 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             {/* Si es Transferencia: Cuenta Destino */}
             {type === 'transfer' && (
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label htmlFor="tx-to-account" className="block text-xs font-semibold text-slate-300 mb-1">
                   Cuenta de Destino
                 </label>
                 <select
+                  id="tx-to-account"
                   value={toAccountId}
-                  onChange={e => setToAccountId(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
+                  onChange={e => {
+                    setToAccountId(e.target.value)
+                    if (validationError) setValidationError(null)
+                  }}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-emerald-500"
                 >
                   {accounts.map(acc => (
                     <option key={acc.id} value={acc.id}>
@@ -325,13 +364,14 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             {/* Categoría */}
             {type !== 'transfer' && (
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label htmlFor="tx-category" className="block text-xs font-semibold text-slate-300 mb-1">
                   Categoría
                 </label>
                 <select
+                  id="tx-category"
                   value={category}
                   onChange={e => setCategory(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-emerald-500"
                 >
                   {availableCategories.map(cat => (
                     <option key={cat.id} value={cat.name}>
@@ -356,13 +396,14 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs text-slate-300 mb-1">
+                    <label htmlFor="tx-installments-count" className="block text-xs text-slate-300 mb-1">
                       Cantidad de Cuotas
                     </label>
                     <select
+                      id="tx-installments-count"
                       value={installmentsCount}
                       onChange={e => setInstallmentsCount(Number(e.target.value))}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white"
+                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                     >
                       <option value={1}>1 Pago (Sin cuotas)</option>
                       <option value={2}>2 Cuotas</option>
@@ -377,13 +418,13 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
                   {installmentsCount > 1 && (
                     <div>
-                      <label className="block text-xs text-slate-300 mb-1">
+                      <span className="block text-xs text-slate-300 mb-1">
                         Convenio de Cuotas
-                      </label>
+                      </span>
                       <button
                         type="button"
                         onClick={() => setIsInterestFree(!isInterestFree)}
-                        className={`w-full py-1.5 px-2 rounded-lg text-xs font-semibold border transition-all ${
+                        className={`w-full py-1.5 px-2 rounded-lg text-xs font-semibold border focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 transition-all ${
                           isInterestFree
                             ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                             : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
@@ -397,16 +438,17 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
                 {installmentsCount > 1 && !isInterestFree && (
                   <div>
-                    <label className="block text-xs text-slate-300 mb-1">
+                    <label htmlFor="tx-surcharge-rate" className="block text-xs text-slate-300 mb-1">
                       Recargo Financiero Total (%)
                     </label>
                     <input
+                      id="tx-surcharge-rate"
                       type="number"
                       step="any"
                       value={surchargeRate}
                       onChange={e => setSurchargeRate(e.target.value)}
                       placeholder="Ej: 15"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white"
+                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                     />
                   </div>
                 )}
@@ -454,7 +496,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setPreviewEnlarged(true)}
-                        className="text-[11px] text-emerald-400 hover:text-emerald-300 flex items-center space-x-1 mt-0.5"
+                        className="text-[11px] text-emerald-400 hover:text-emerald-300 flex items-center space-x-1 mt-0.5 focus:outline-none focus-visible:underline"
                       >
                         <Eye className="w-3 h-3" />
                         <span>Ver foto completa</span>
@@ -465,7 +507,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setReceiptImage(null)}
-                    className="p-1.5 text-slate-400 hover:text-rose-400 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
+                    aria-label="Eliminar foto de boleta"
+                    className="p-1.5 text-slate-400 hover:text-rose-400 bg-slate-800 hover:bg-slate-700 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 transition-colors"
                     title="Eliminar foto"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -478,7 +521,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                     type="button"
                     onClick={() => cameraInputRef.current?.click()}
                     disabled={isCompressing}
-                    className="flex items-center justify-center space-x-2 py-2 px-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs font-semibold text-slate-300 transition-colors"
+                    className="flex items-center justify-center space-x-2 py-2 px-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs font-semibold text-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 transition-colors"
                   >
                     <Camera className="w-4 h-4 text-emerald-400" />
                     <span>Tomar Foto</span>
@@ -489,7 +532,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isCompressing}
-                    className="flex items-center justify-center space-x-2 py-2 px-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs font-semibold text-slate-300 transition-colors"
+                    className="flex items-center justify-center space-x-2 py-2 px-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs font-semibold text-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 transition-colors"
                   >
                     <UploadCloud className="w-4 h-4 text-indigo-400" />
                     <span>Subir Archivo</span>
@@ -505,6 +548,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                 capture="environment"
                 onChange={handleImageUpload}
                 className="hidden"
+                aria-label="Tomar foto con la cámara"
               />
               <input
                 type="file"
@@ -512,20 +556,22 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                 accept="image/*"
                 onChange={handleImageUpload}
                 className="hidden"
+                aria-label="Seleccionar archivo de imagen"
               />
             </div>
 
             {/* Notas opcionales */}
             <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1">
+              <label htmlFor="tx-notes" className="block text-xs font-semibold text-slate-400 mb-1">
                 Notas Adicionales (Opcional)
               </label>
               <input
+                id="tx-notes"
                 type="text"
                 placeholder="Detalle o etiqueta..."
                 value={notes}
                 onChange={e => setNotes(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition-colors"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:border-emerald-500 transition-colors"
               />
             </div>
 
@@ -534,14 +580,14 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white rounded-xl transition-colors"
+                className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 transition-colors"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={isCompressing}
-                className="px-5 py-2.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 rounded-xl transition-all shadow-sm"
+                className="px-5 py-2.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 transition-all shadow-sm"
               >
                 {transactionToEdit ? 'Actualizar' : 'Guardar Movimiento'}
               </button>
@@ -553,23 +599,27 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
       {/* Modal Lightbox para ver boleta en grande */}
       {previewEnlarged && receiptImage && (
         <div 
-          onClick={() => setPreviewEnlarged(false)}
-          className="fixed inset-0 z-60 bg-black/90 flex items-center justify-center p-4 backdrop-blur-md cursor-pointer"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Vista previa ampliada de boleta"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
         >
-          <div className="relative max-w-2xl max-h-[90vh] overflow-hidden rounded-2xl bg-slate-900 border border-slate-800 p-2">
-            <button
-              onClick={() => setPreviewEnlarged(false)}
-              className="absolute top-4 right-4 p-2 bg-black/70 hover:bg-black text-white rounded-full transition-colors z-10"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <img 
-              src={receiptImage} 
-              alt="Boleta en tamaño completo" 
-              className="max-h-[82vh] w-auto mx-auto object-contain rounded-xl" 
-            />
-            <div className="text-center text-xs text-slate-400 py-2">
-              Haz clic en cualquier lugar para cerrar
+          <div className="relative max-w-2xl max-h-[90vh] bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+            <div className="flex items-center justify-between p-3.5 border-b border-slate-800 bg-slate-950">
+              <span className="text-xs font-bold text-white flex items-center space-x-1.5">
+                <Receipt className="w-4 h-4 text-emerald-400" />
+                <span>Comprobante Adjunto</span>
+              </span>
+              <button
+                onClick={() => setPreviewEnlarged(false)}
+                aria-label="Cerrar vista previa ampliada"
+                className="p-1.5 text-slate-400 hover:text-white rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="overflow-auto p-2 flex items-center justify-center bg-black/40">
+              <img src={receiptImage} alt="Comprobante ampliado" className="max-w-full max-h-[75vh] object-contain rounded-lg" />
             </div>
           </div>
         </div>
